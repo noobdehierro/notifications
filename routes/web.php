@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CampaignController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,4 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/user-management', [PageController::class, 'userManagement'])->name('user-management');
 
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+	Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns');
+	Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
+	Route::post('/campaigns/store', [CampaignController::class, 'store'])->name('campaigns.store');
 });
