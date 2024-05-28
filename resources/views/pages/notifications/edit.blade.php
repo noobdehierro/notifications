@@ -35,14 +35,9 @@
                                                                 role="alert">{{ $errors->first('name') }}
                                                             </div>
                                                         @endif
-
                                                     </div>
                                                 </div>
-
                                             </div>
-
-
-
                                         </div>
                                     </form>
                                 </div>

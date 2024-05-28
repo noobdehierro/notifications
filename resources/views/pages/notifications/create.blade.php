@@ -44,28 +44,9 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="example-text-input"
-                                                            class="form-control-label">Plantillas a utilizar</label>
-                                                        <select class="form-select" name="templates_id[]" multiple>
-                                                            @foreach ($templates as $template)
-                                                                <option value="{{ $template->id }}">
-                                                                    {{ $template->name . ' - ' . $template->channel->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-
-                                                        @if ($errors->has('templates_id'))
-                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
-                                                                role="alert">{{ $errors->first('templates_id') }}
-                                                            </div>
-                                                        @endif
-
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="example-text-input" class="form-control-label">Fecha de
+                                                        <label for="example-text-input" class="form-control-label">Hora de
                                                             envio</label>
-                                                        <input class="form-control" type="datetime-local" name="sent_at">
+                                                        <input class="form-control" type="time" name="sent_at">
 
                                                         @if ($errors->has('sent_at'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"

@@ -31,7 +31,8 @@ class CampaignController extends Controller
      */
     public function create()
     {
-        return view("pages.campaigns.create");
+        $templates = Template::all();
+        return view("pages.campaigns.create", compact("templates"));
     }
 
     /**
@@ -44,7 +45,10 @@ class CampaignController extends Controller
     {
         $request->validate([
             "name" => "required|unique:campaigns",
+            "templates_id" => "required",
         ]);
+
+        $request["templates_id"] = json_encode($request["templates_id"]);
 
         try {
             Campaign::create($request->all());

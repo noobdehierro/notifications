@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'templates_id'];
 
     public function notifications()
     {

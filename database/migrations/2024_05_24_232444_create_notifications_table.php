@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained('campaigns')->onDelete('cascade');
-            $table->timestamp('sent_at')->nullable();
+            $table->time('sent_at')->nullable();
             $table->string('status');
             $table->timestamps();
         });
