@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Channel;
 use Illuminate\Http\Request;
 
 class ChannelController extends Controller
@@ -13,7 +14,8 @@ class ChannelController extends Controller
      */
     public function index()
     {
-        //
+        $channels = Channel::all();
+        return view('pages.channels.index', compact('channels'));
     }
 
     /**
@@ -23,7 +25,7 @@ class ChannelController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.channels.create');
     }
 
     /**
@@ -34,7 +36,16 @@ class ChannelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'name' => 'required|unique:campaigns',
+        ]);
+
+        $channel = new Channel();
+        $channel->name = $request->name;
+        $channel->save();
+        return redirect()->route('channels.index')->with('success', 'Canal creado con éxito.');
+
     }
 
     /**
@@ -54,9 +65,9 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Channel $channel)
     {
-        //
+        return view('pages.channels.edit', compact('channel'));
     }
 
     /**
@@ -66,9 +77,16 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Channel $channel)
     {
-        //
+
+        $request->validate([
+            'name' => 'required|unique:campaigns,name,' . $channel->id,
+        ]);
+
+        $channel->name = $request->name;
+        $channel->save();
+        return redirect()->route('channels.index')->with('success', 'Canal actualizado con éxito.');
     }
 
     /**
@@ -77,8 +95,11 @@ class ChannelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Channel $channel)
     {
-        //
+
+        $channel->delete();
+
+        return redirect()->route('channels.index')->with('success', 'Canal eliminado con éxito.');
     }
 }

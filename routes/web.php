@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\ChannelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,7 +59,17 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-	Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns');
+	Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
 	Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
 	Route::post('/campaigns/store', [CampaignController::class, 'store'])->name('campaigns.store');
+	Route::get('/campaigns/edit/{campaign}', [CampaignController::class, 'edit'])->name('campaigns.edit');
+	Route::post('/campaigns/update/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
+	Route::delete('/campaigns/destroy/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
+
+	Route::get('/channels', [ChannelController::class, 'index'])->name('channels.index');
+	Route::get('/channels/create', [ChannelController::class, 'create'])->name('channels.create');
+	Route::post('/channels/store', [ChannelController::class, 'store'])->name('channels.store');
+	Route::get('/channels/edit/{channel}', [ChannelController::class, 'edit'])->name('channels.edit');
+	Route::post('/channels/update/{channel}', [ChannelController::class, 'update'])->name('channels.update');
+	Route::delete('/channels/destroy/{channel}', [ChannelController::class, 'destroy'])->name('channels.destroy');
 });

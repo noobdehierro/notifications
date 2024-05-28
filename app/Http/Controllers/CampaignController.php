@@ -6,26 +6,27 @@ use App\Models\Campaign;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Http\RedirectResponse;
 
 class CampaignController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return ViewContract|ViewFactory
      */
     public function index(): ViewContract|ViewFactory
     {
         $campaigns = Campaign::all();
-        return View("pages.campaigns.index", ["campaigns" => $campaigns]);
+        return view("pages.campaigns.index", ["campaigns" => $campaigns]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return ViewContract|ViewFactory
      */
-    public function create()
+    public function create(): ViewContract|ViewFactory
     {
         return view("pages.campaigns.create");
     }
@@ -33,64 +34,72 @@ class CampaignController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            "name" => "required",
+            "name" => "required|unique:campaigns",
         ]);
 
         $campaign = new Campaign();
         $campaign->name = $request->get("name");
         $campaign->save();
 
-        return redirect("/campaigns");
+        return redirect()->route('campaigns.index')->with('success', 'Campaign created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Campaign  $campaign
+     * @return ViewContract|ViewFactory
      */
-    public function show($id)
+    public function show(Campaign $campaign): ViewContract|ViewFactory
     {
-        //
+        // return view('pages.campaigns.show', ['campaign' => $campaign]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Campaign  $campaign
+     * @return ViewContract|ViewFactory
      */
-    public function edit($id)
+    public function edit(Campaign $campaign): ViewContract|ViewFactory
     {
-        //
+        return view("pages.campaigns.edit", ["campaign" => $campaign]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  Campaign  $campaign
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Campaign $campaign): RedirectResponse
     {
-        //
+        $request->validate([
+            "name" => "required|unique:campaigns,name," . $campaign->id,
+        ]);
+
+        $campaign->name = $request->get("name");
+        $campaign->save();
+
+        return redirect()->route('campaigns.index')->with('success', 'Campaign updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Campaign  $campaign
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Campaign $campaign): RedirectResponse
     {
-        //
+        $campaign->delete();
+        return redirect()->route('campaigns.index')->with('success', 'Campaign deleted successfully.');
     }
 }
