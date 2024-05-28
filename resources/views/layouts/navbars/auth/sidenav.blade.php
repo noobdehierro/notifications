@@ -72,6 +72,28 @@
                     <span class="nav-link-text ms-1">Billing</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'channels') == true ? 'active' : '' }}"
+                    href="{{ route('channels.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Canales</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'templates') == true ? 'active' : '' }}"
+                    href="{{ route('templates.index') }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Plantillas</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'campaigns') == true ? 'active' : '' }}"
                     href="{{ route('campaigns.index') }}">
@@ -83,14 +105,15 @@
                 </a>
             </li>
 
+
             <li class="nav-item">
-                <a class="nav-link {{ str_contains(request()->url(), 'campaigns') == true ? 'active' : '' }}"
-                    href="{{ route('channels.index') }}">
+                <a class="nav-link {{ str_contains(request()->url(), 'notifications') == true ? 'active' : '' }}"
+                    href="{{ route('notifications.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Canales</span>
+                    <span class="nav-link-text ms-1">Notificaciones</span>
                 </a>
             </li>
 

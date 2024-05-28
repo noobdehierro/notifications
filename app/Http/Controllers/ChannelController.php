@@ -41,11 +41,12 @@ class ChannelController extends Controller
             'name' => 'required|unique:campaigns',
         ]);
 
-        $channel = new Channel();
-        $channel->name = $request->name;
-        $channel->save();
-        return redirect()->route('channels.index')->with('success', 'Canal creado con éxito.');
-
+        try {
+            Channel::create($request->all());
+            return redirect()->route('channels.index')->with('success', 'Canal creado con éxito.');
+        } catch (\Exception $e) {
+            return redirect()->route('channels.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -84,9 +85,12 @@ class ChannelController extends Controller
             'name' => 'required|unique:campaigns,name,' . $channel->id,
         ]);
 
-        $channel->name = $request->name;
-        $channel->save();
-        return redirect()->route('channels.index')->with('success', 'Canal actualizado con éxito.');
+        try {
+            $channel->update($request->all());
+            return redirect()->route('channels.index')->with('success', 'Canal actualizado con éxito.');
+        } catch (\Exception $e) {
+            return redirect()->route('channels.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -98,8 +102,11 @@ class ChannelController extends Controller
     public function destroy(Channel $channel)
     {
 
-        $channel->delete();
-
-        return redirect()->route('channels.index')->with('success', 'Canal eliminado con éxito.');
+        try {
+            $channel->delete();
+            return redirect()->route('channels.index')->with('success', 'Canal eliminado con éxito.');
+        } catch (\Exception $e) {
+            return redirect()->route('channels.index')->with('error', $e->getMessage());
+        }
     }
 }

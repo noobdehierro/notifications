@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Campaigns'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Campañas'])
     <div class="container-fluid py-4">
         <div id="alert">
             @include('components.alert')
@@ -63,6 +63,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"
                                                         onclick="return confirm('¿Estás seguro de que deseas eliminar esta campaña?')">
+                                                        <i class="far fa-trash-alt me-2"></i>
                                                         Eliminar
                                                     </button>
                                                 </form>

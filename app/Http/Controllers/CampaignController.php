@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign;
+use App\Models\CampaignChannelTemplate;
+use App\Models\Notification;
+use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Contracts\View\Factory as ViewFactory;
@@ -15,10 +18,10 @@ class CampaignController extends Controller
      *
      * @return ViewContract|ViewFactory
      */
-    public function index(): ViewContract|ViewFactory
+    public function index()
     {
         $campaigns = Campaign::all();
-        return view("pages.campaigns.index", ["campaigns" => $campaigns]);
+        return view("pages.campaigns.index", compact("campaigns"));
     }
 
     /**
@@ -26,7 +29,7 @@ class CampaignController extends Controller
      *
      * @return ViewContract|ViewFactory
      */
-    public function create(): ViewContract|ViewFactory
+    public function create()
     {
         return view("pages.campaigns.create");
     }
@@ -37,17 +40,18 @@ class CampaignController extends Controller
      * @param  Request  $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             "name" => "required|unique:campaigns",
         ]);
 
-        $campaign = new Campaign();
-        $campaign->name = $request->get("name");
-        $campaign->save();
-
-        return redirect()->route('campaigns.index')->with('success', 'Campaign created successfully.');
+        try {
+            Campaign::create($request->all());
+            return redirect()->route('campaigns.index')->with('success', 'Campaign created successfully.');
+        } catch (\Throwable $th) {
+            return redirect()->route('campaigns.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -56,7 +60,7 @@ class CampaignController extends Controller
      * @param  Campaign  $campaign
      * @return ViewContract|ViewFactory
      */
-    public function show(Campaign $campaign): ViewContract|ViewFactory
+    public function show(Campaign $campaign)
     {
         // return view('pages.campaigns.show', ['campaign' => $campaign]);
     }
@@ -67,9 +71,9 @@ class CampaignController extends Controller
      * @param  Campaign  $campaign
      * @return ViewContract|ViewFactory
      */
-    public function edit(Campaign $campaign): ViewContract|ViewFactory
+    public function edit(Campaign $campaign)
     {
-        return view("pages.campaigns.edit", ["campaign" => $campaign]);
+        return view("pages.campaigns.edit", compact("campaign"));
     }
 
     /**
@@ -79,16 +83,18 @@ class CampaignController extends Controller
      * @param  Campaign  $campaign
      * @return RedirectResponse
      */
-    public function update(Request $request, Campaign $campaign): RedirectResponse
+    public function update(Request $request, Campaign $campaign)
     {
         $request->validate([
             "name" => "required|unique:campaigns,name," . $campaign->id,
         ]);
 
-        $campaign->name = $request->get("name");
-        $campaign->save();
-
-        return redirect()->route('campaigns.index')->with('success', 'Campaign updated successfully.');
+        try {
+            $campaign->update($request->all());
+            return redirect()->route('campaigns.index')->with('success', 'Campaign updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('campaigns.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -97,9 +103,13 @@ class CampaignController extends Controller
      * @param  Campaign  $campaign
      * @return RedirectResponse
      */
-    public function destroy(Campaign $campaign): RedirectResponse
+    public function destroy(Campaign $campaign)
     {
-        $campaign->delete();
-        return redirect()->route('campaigns.index')->with('success', 'Campaign deleted successfully.');
+        try {
+            $campaign->delete();
+            return redirect()->route('campaigns.index')->with('success', 'Campaign deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('campaigns.index')->with('error', $e->getMessage());
+        }
     }
 }

@@ -26,7 +26,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
-
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\TemplateController;
 
 Route::get('/', function () {
 	return redirect('/dashboard');
@@ -72,4 +73,18 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/channels/edit/{channel}', [ChannelController::class, 'edit'])->name('channels.edit');
 	Route::post('/channels/update/{channel}', [ChannelController::class, 'update'])->name('channels.update');
 	Route::delete('/channels/destroy/{channel}', [ChannelController::class, 'destroy'])->name('channels.destroy');
+
+	Route::get('/templates', [TemplateController::class, 'index'])->name('templates.index');
+	Route::get('/templates/create', [TemplateController::class, 'create'])->name('templates.create');
+	Route::post('/templates/store', [TemplateController::class, 'store'])->name('templates.store');
+	Route::get('/templates/edit/{template}', [TemplateController::class, 'edit'])->name('templates.edit');
+	Route::post('/templates/update/{template}', [TemplateController::class, 'update'])->name('templates.update');
+	Route::delete('/templates/destroy/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
+
+	Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+	Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notifications.create');
+	Route::post('/notifications/store', [NotificationController::class, 'store'])->name('notifications.store');
+	Route::get('/notifications/edit/{notification}', [NotificationController::class, 'edit'])->name('notifications.edit');
+	Route::post('/notifications/update/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
+	Route::delete('/notifications/destroy/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 });

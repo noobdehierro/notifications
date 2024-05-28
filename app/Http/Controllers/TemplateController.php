@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Channel;
+use App\Models\Template;
 use Illuminate\Http\Request;
 
 class TemplateController extends Controller
@@ -13,7 +15,8 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        //
+        $templates = Template::all();
+        return view('pages.templates.index', compact('templates'));
     }
 
     /**
@@ -23,7 +26,9 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        //
+        $channels = Channel::all();
+
+        return view('pages.templates.create', compact('channels'));
     }
 
     /**
@@ -34,7 +39,22 @@ class TemplateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'channel_id' => 'required',
+            'placeholder' => 'required',
+        ]);
+
+        // $channelName = Channel::find($request->channel_id)->name;
+
+        // $request['name'] = $request->name . ' - ' . $channelName;
+
+        try {
+            Template::create($request->all());
+            return redirect()->route('templates.index')->with('success', 'Template created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('templates.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -54,9 +74,11 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Template $template)
     {
-        //
+        $channels = Channel::all();
+
+        return view('pages.templates.edit', compact('template', 'channels'));
     }
 
     /**
@@ -68,7 +90,19 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'channel_id' => 'required',
+            'placeholder' => 'required',
+        ]);
+
+        try {
+            $template = Template::find($id);
+            $template->update($request->all());
+            return redirect()->route('templates.index')->with('success', 'Template updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('templates.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -77,8 +111,13 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Template $template)
     {
-        //
+        try {
+            $template->delete();
+            return redirect()->route('templates.index')->with('success', 'Template deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('templates.index')->with('error', $e->getMessage());
+        }
     }
 }
