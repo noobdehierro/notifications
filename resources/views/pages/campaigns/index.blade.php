@@ -29,6 +29,22 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Nombre</th>
                                         <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Query</th>
+
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Plantillas</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Dia</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Hora</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Status</th>
+                                        <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             fecha de creación</th>
                                         <th
@@ -45,6 +61,32 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $campaign->name }}</p>
                                             </td>
+
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $campaign->query }}</p>
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $campaign->template }}</p>
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $campaign->day }}</p>
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $campaign->hour }}</p>
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $campaign->status }}</p>
+                                                </p>
+                                            </td>
+
                                             <td class="align-middle text-center text-sm">
                                                 <span
                                                     class="badge badge-sm bg-gradient-success">{{ $campaign->created_at }}</span>
@@ -55,10 +97,10 @@
                                                     class="btn btn-info btn-sm">
                                                     Editar
                                                 </a>
-                                                {{-- <a href="{{ route('campaigns.destroy', $campaign->id) }}"
+                                                <a href="{{ route('campaigns.destroy', $campaign->id) }}"
                                                     class="text-secondary font-weight-bold text-xs">
                                                     <i class="far fa-trash-alt me-2"></i> Eliminar
-                                                </a> --}}
+                                                </a>
                                                 <form action="{{ route('campaigns.destroy', $campaign->id) }}"
                                                     class="form-check-inline py-0" method="POST">
                                                     @csrf

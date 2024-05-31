@@ -8,15 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'templates_id'];
 
-    public function notifications()
+    protected $fillable = ['name', 'query_id', 'days', 'hour', 'status'];
+
+    public function queryRelation()
     {
-        return $this->hasMany(Notification::class);
+        return $this->belongsTo(Query::class);
     }
 
-    public function channelsTemplates()
+    public function templates()
     {
-        return $this->hasMany(CampaignChannelTemplate::class);
+        return $this->belongsToMany(Template::class, 'campaign_template');
     }
 }

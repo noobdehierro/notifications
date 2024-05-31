@@ -45,7 +45,11 @@ class CampaignController extends Controller
     {
         $request->validate([
             "name" => "required|unique:campaigns",
+            "query" => "required",
             "templates_id" => "required",
+            "days" => "required",
+            "hour" => "required",
+            "status" => "required",
         ]);
 
         $request["templates_id"] = json_encode($request["templates_id"]);

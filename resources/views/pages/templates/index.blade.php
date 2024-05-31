@@ -32,9 +32,6 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Canal</th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Ruta</th>
-                                        <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Fecha de creación</th>
                                         <th
@@ -55,10 +52,6 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $template->channel->name }}
                                                 </p>
-                                            </td>
-
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $template->path }}</p>
                                             </td>
 
                                             <td class="align-middle text-center text-sm">

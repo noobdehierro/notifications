@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('channel_id')->constrained('channels');
+            $table->unsignedBigInteger('channel_id');
             $table->string('name');
-            $table->text('placeholder')->required();
-            $table->string('path');
+            $table->text('placeholder');
             $table->timestamps();
 
             $table->unique(['name', 'channel_id']);
+            $table->foreign('channel_id')->references('id')->on('channels')->onDelete('cascade');
         });
     }
 

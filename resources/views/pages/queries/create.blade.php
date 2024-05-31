@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Notificaciones'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Queries'])
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -10,12 +10,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">
-                                    <form role="form" method="POST" action={{ route('notifications.store') }}
+                                    <form role="form" method="POST" action={{ route('queries.store') }}
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="card-header pb-0">
                                             <div class="d-flex align-items-center">
-                                                <p class="mb-0">Crear Campaña</p>
+                                                <p class="mb-0">Crear Query</p>
                                                 <button type="submit"
                                                     class="btn btn-primary btn-sm ms-auto">Guardar</button>
                                             </div>

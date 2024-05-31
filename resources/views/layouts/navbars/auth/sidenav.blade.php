@@ -106,7 +106,7 @@
             </li>
 
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'notifications') == true ? 'active' : '' }}"
                     href="{{ route('notifications.index') }}">
                     <div
@@ -115,7 +115,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Notificaciones</span>
                 </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'configurations') == true ? 'active' : '' }}"

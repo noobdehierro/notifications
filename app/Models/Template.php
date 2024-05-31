@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Template extends Model
 {
     use HasFactory;
-    protected $fillable = ['channel_id', 'name', 'placeholder', 'path'];
+    protected $fillable = ['channel_id', 'name', 'placeholder'];
 
     public function channel()
     {
         return $this->belongsTo(Channel::class);
+    }
+
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class, 'campaign_template');
     }
 }

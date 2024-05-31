@@ -16,8 +16,13 @@ return new class extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('templates_id');
+            $table->unsignedBigInteger('query_id');
+            $table->string('days');
+            $table->string('hour');
+            $table->string('status');
             $table->timestamps();
+
+            $table->foreign('query_id')->references('id')->on('queries')->onDelete('cascade');
         });
     }
 

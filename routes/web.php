@@ -82,13 +82,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/templates/update/{template}', [TemplateController::class, 'update'])->name('templates.update');
 	Route::delete('/templates/destroy/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
 
-	Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-	Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notifications.create');
-	Route::post('/notifications/store', [NotificationController::class, 'store'])->name('notifications.store');
-	Route::get('/notifications/edit/{notification}', [NotificationController::class, 'edit'])->name('notifications.edit');
-	Route::post('/notifications/update/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
-	Route::delete('/notifications/destroy/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
-
 	Route::get('/configurations', [ConfigurationController::class, 'index'])->name('configurations.index');
 	Route::get('/configurations/create', [ConfigurationController::class, 'create'])->name('configurations.create');
 	Route::post('/configurations/store', [ConfigurationController::class, 'store'])->name('configurations.store');
