@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\ConfigurationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,4 +88,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/notifications/edit/{notification}', [NotificationController::class, 'edit'])->name('notifications.edit');
 	Route::post('/notifications/update/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
 	Route::delete('/notifications/destroy/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+
+	Route::get('/configurations', [ConfigurationController::class, 'index'])->name('configurations.index');
+	Route::get('/configurations/create', [ConfigurationController::class, 'create'])->name('configurations.create');
+	Route::post('/configurations/store', [ConfigurationController::class, 'store'])->name('configurations.store');
+	Route::get('/configurations/edit/{configuration}', [ConfigurationController::class, 'edit'])->name('configurations.edit');
+	Route::post('/configurations/update/{configuration}', [ConfigurationController::class, 'update'])->name('configurations.update');
+	Route::delete('/configurations/destroy/{configuration}', [ConfigurationController::class, 'destroy'])->name('configurations.destroy');
 });

@@ -50,7 +50,7 @@ class NotificationController extends Controller
         Notification::create([
             "campaign_id" => $request->input("campaign_id"),
             "sent_at" => $request->input("sent_at"),
-            "status" => "pending",
+            "status" => "Active",
         ]);
 
         return redirect()->route('notifications.index')->with('success', 'Campaign created successfully.');
@@ -73,9 +73,11 @@ class NotificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Notification $notification)
     {
-        //
+        $campaigns = Campaign::all();
+
+        return view('pages.notifications.edit', compact('notification', 'campaigns'));
     }
 
     /**

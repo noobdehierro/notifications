@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('channel_id')->constrained('channels');
             $table->string('name');
             $table->text('placeholder')->required();
+            $table->string('path');
             $table->timestamps();
 
             $table->unique(['name', 'channel_id']);

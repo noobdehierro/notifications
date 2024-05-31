@@ -43,6 +43,7 @@ class TemplateController extends Controller
             'name' => 'required',
             'channel_id' => 'required',
             'placeholder' => 'required',
+            'path' => 'required',
         ]);
 
         // $channelName = Channel::find($request->channel_id)->name;
@@ -94,6 +95,7 @@ class TemplateController extends Controller
             'name' => 'required',
             'channel_id' => 'required',
             'placeholder' => 'required',
+            'path' => 'required',
         ]);
 
         try {

@@ -77,7 +77,9 @@ class CampaignController extends Controller
      */
     public function edit(Campaign $campaign)
     {
-        return view("pages.campaigns.edit", compact("campaign"));
+        $templates = Template::all();
+
+        return view("pages.campaigns.edit", compact("campaign", "templates"));
     }
 
     /**

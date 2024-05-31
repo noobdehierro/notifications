@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Notificaciones'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Configuraciones'])
     <div class="container-fluid py-4">
         @if ($message = session()->has('success') || ($message = session()->has('error')))
             <div id="alert">
@@ -13,9 +13,9 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6>Notificaciones</h6>
+                            <h6>Configuraciones</h6>
                             <!-- Agregar botón -->
-                            <a href="{{ route('notifications.create') }}" class="btn btn-primary">Agregar</a>
+                            <a href="{{ route('configurations.create') }}" class="btn btn-primary">Agregar</a>
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -27,45 +27,44 @@
                                             #</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Nombre de la campaña</th>
+                                            Nombre</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Fecha de envió</th>
+                                            Código</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Status</th>
+                                            Valor</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($notifications as $notification)
+                                    @foreach ($configurations as $configuration)
                                         <tr>
                                             <td>
-                                                <p class="text-xs text-secondary mb-0  px-3 ">{{ $notification->id }}</p>
+                                                <p class="text-xs text-secondary mb-0  px-3 ">{{ $configuration->id }}</p>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $notification->campaign->name }}
-                                                </p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $configuration->label }}</p>
                                             </td>
 
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $notification->sent_at }}</p>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $configuration->code }}</p>
                                                 </p>
                                             </td>
-
-                                            <td class="align-middle text-center text-sm">
-                                                <span
-                                                    class="badge badge-sm bg-gradient-success">{{ $notification->status }}</span>
+                                            <td>
+                                                <p class="text-xs text-center font-weight-bold mb-0">
+                                                    {{ $configuration->value }}</p>
+                                                </p>
                                             </td>
 
                                             <td class="align-middle text-center">
-                                                <a href="{{ route('notifications.edit', $notification->id) }}"
+                                                <a href="{{ route('configurations.edit', $configuration->id) }}"
                                                     class="btn btn-info btn-sm">
                                                     Editar
                                                 </a>
-                                                <form action="{{ route('notifications.destroy', $notification->id) }}"
+                                                <form action="{{ route('configurations.destroy', $configuration->id) }}"
                                                     class="form-check-inline py-0" method="POST">
                                                     @csrf
                                                     @method('DELETE')
@@ -77,7 +76,6 @@
                                                 </form>
 
                                             </td>
-
                                         </tr>
                                     @endforeach
                                 </tbody>

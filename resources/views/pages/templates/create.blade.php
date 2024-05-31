@@ -57,6 +57,19 @@
 
                                                     <div class="form-group">
                                                         <label for="example-text-input"
+                                                            class="form-control-label">Ruta</label>
+                                                        <input class="form-control" type="text" name="path">
+
+                                                        @if ($errors->has('path'))
+                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                role="alert">{{ $errors->first('path') }}
+                                                            </div>
+                                                        @endif
+
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="example-text-input"
                                                             class="form-control-label">Contenido</label>
 
                                                         <textarea class="form-control" name="placeholder" id="exampleFormControlTextarea1" rows="3"></textarea>

@@ -3,9 +3,11 @@
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Campañas'])
     <div class="container-fluid py-4">
-        <div id="alert">
-            @include('components.alert')
-        </div>
+        @if ($message = session()->has('success') || ($message = session()->has('error')))
+            <div id="alert">
+                @include('components.alert')
+            </div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">

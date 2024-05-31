@@ -3,9 +3,11 @@
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Plantillas'])
     <div class="container-fluid py-4">
-        <div id="alert">
-            @include('components.alert')
-        </div>
+        @if ($message = session()->has('success') || ($message = session()->has('error')))
+            <div id="alert">
+                @include('components.alert')
+            </div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
@@ -30,8 +32,11 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Canal</th>
                                         <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Ruta</th>
+                                        <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            fecha de creación</th>
+                                            Fecha de creación</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Acciones</th>
@@ -50,6 +55,10 @@
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $template->channel->name }}
                                                 </p>
+                                            </td>
+
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">{{ $template->path }}</p>
                                             </td>
 
                                             <td class="align-middle text-center text-sm">
