@@ -89,3 +89,5 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/configurations/update/{configuration}', [ConfigurationController::class, 'update'])->name('configurations.update');
 	Route::delete('/configurations/destroy/{configuration}', [ConfigurationController::class, 'destroy'])->name('configurations.destroy');
 });
+
+Route::post('/get-chanel', [ChannelController::class, 'getChannel'])->name('get-chanel');

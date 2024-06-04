@@ -30,6 +30,9 @@
                                             Nombre</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            Caracteres maximos</th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             fecha de creación</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -44,6 +47,10 @@
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">{{ $channel->name }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="badge badge-sm bg-gradient-success"> Max.
+                                                    {{ $channel->max_characters }}</span>
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 <span

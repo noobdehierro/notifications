@@ -39,6 +39,7 @@ class ChannelController extends Controller
 
         $request->validate([
             'name' => 'required|unique:campaigns',
+            'max_characters' => 'required|numeric',
         ]);
 
         try {
@@ -83,6 +84,7 @@ class ChannelController extends Controller
 
         $request->validate([
             'name' => 'required|unique:campaigns,name,' . $channel->id,
+            'max_characters' => 'required|numeric',
         ]);
 
         try {
@@ -108,5 +110,19 @@ class ChannelController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('channels.index')->with('error', $e->getMessage());
         }
+    }
+
+    public function getChannel(Request $request)
+    {
+        $request->validate([
+            'channel_id' => 'required|exists:channels,id',
+        ]);
+
+        $request['id'] = $request->channel_id;
+
+        $channel = Channel::find($request->id);
+        return response()->json($channel);
+
+        // return response()->json($request->all());
     }
 }

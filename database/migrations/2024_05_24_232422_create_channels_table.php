@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->integer('max_characters')->default(160);
             $table->timestamps();
         });
     }

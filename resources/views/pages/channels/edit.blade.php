@@ -37,6 +37,21 @@
                                                         @endif
 
                                                     </div>
+
+                                                    <div class="form-group">
+                                                        <label for="example-text-input" class="form-control-label">maximo de
+                                                            caracteres</label>
+
+                                                        <input class="form-control" type="number" name="max_characters"
+                                                            value="{{ $channel->max_characters }}">
+
+                                                        @if ($errors->has('max_characters'))
+                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                role="alert">{{ $errors->first('max_characters') }}
+                                                            </div>
+                                                        @endif
+
+                                                    </div>
                                                 </div>
 
                                             </div>
