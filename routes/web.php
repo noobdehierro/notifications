@@ -28,6 +28,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\QueryController;
 use App\Http\Controllers\TemplateController;
 
 Route::get('/', function () {
@@ -88,6 +89,13 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/configurations/edit/{configuration}', [ConfigurationController::class, 'edit'])->name('configurations.edit');
 	Route::post('/configurations/update/{configuration}', [ConfigurationController::class, 'update'])->name('configurations.update');
 	Route::delete('/configurations/destroy/{configuration}', [ConfigurationController::class, 'destroy'])->name('configurations.destroy');
+
+	Route::get('/queries', [QueryController::class, 'index'])->name('queries.index');
+	Route::get('/queries/create', [QueryController::class, 'create'])->name('queries.create');
+	Route::post('/queries/store', [QueryController::class, 'store'])->name('queries.store');
+	Route::get('/queries/edit/{query}', [QueryController::class, 'edit'])->name('queries.edit');
+	Route::post('/queries/update/{query}', [QueryController::class, 'update'])->name('queries.update');
+	Route::delete('/queries/destroy/{query}', [QueryController::class, 'destroy'])->name('queries.destroy');
 });
 
 Route::post('/get-chanel', [ChannelController::class, 'getChannel'])->name('get-chanel');

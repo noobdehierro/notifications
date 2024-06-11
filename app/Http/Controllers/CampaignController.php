@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Models\CampaignChannelTemplate;
 use App\Models\Notification;
+use App\Models\Query;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View as ViewContract;
@@ -32,7 +33,8 @@ class CampaignController extends Controller
     public function create()
     {
         $templates = Template::all();
-        return view("pages.campaigns.create", compact("templates"));
+        $queries = Query::all();
+        return view("pages.campaigns.create", compact("templates", "queries"));
     }
 
     /**
@@ -43,16 +45,19 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        dd($request->all());
+        $attributes = $request->validate([
             "name" => "required|unique:campaigns",
             "query" => "required",
             "templates_id" => "required",
             "days" => "required",
             "hour" => "required",
-            "status" => "required",
+            'is_active' => ['nullable', 'in:on,off'],
         ]);
 
-        $request["templates_id"] = json_encode($request["templates_id"]);
+        $attributes['is_active'] = $request->is_active == 'on';
+
+        dd($attributes);
 
         try {
             Campaign::create($request->all());

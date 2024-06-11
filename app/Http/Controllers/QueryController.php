@@ -14,7 +14,9 @@ class QueryController extends Controller
      */
     public function index()
     {
-        //
+        $queries = Query::all();
+
+        return view("pages.queries.index", compact("queries"));
     }
 
     /**
@@ -24,7 +26,7 @@ class QueryController extends Controller
      */
     public function create()
     {
-        //
+        return view("pages.queries.create");
     }
 
     /**
@@ -35,7 +37,17 @@ class QueryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "name" => "required",
+            "query" => "required",
+        ]);
+
+        try {
+            Query::create($request->all());
+            return redirect()->route("queries.index")->with("success", "Query creado con éxito.");
+        } catch (\Exception $e) {
+            return redirect()->route("queries.index")->with("error", $e->getMessage());
+        }
     }
 
     /**
@@ -57,7 +69,7 @@ class QueryController extends Controller
      */
     public function edit(Query $query)
     {
-        //
+        return view("pages.queries.edit", compact("query"));
     }
 
     /**
@@ -69,7 +81,17 @@ class QueryController extends Controller
      */
     public function update(Request $request, Query $query)
     {
-        //
+        $request->validate([
+            "name" => "required",
+            "query" => "required",
+        ]);
+
+        try {
+            $query->update($request->all());
+            return redirect()->route("queries.index")->with("success", "Query actualizado con éxito.");
+        } catch (\Exception $e) {
+            return redirect()->route("queries.index")->with("error", $e->getMessage());
+        }
     }
 
     /**
@@ -80,6 +102,11 @@ class QueryController extends Controller
      */
     public function destroy(Query $query)
     {
-        //
+        try {
+            $query->delete();
+            return redirect()->route("queries.index")->with("success", "Query eliminado con éxito.");
+        } catch (\Exception $e) {
+            return redirect()->route("queries.index")->with("error", $e->getMessage());
+        }
     }
 }

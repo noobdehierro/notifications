@@ -25,7 +25,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="example-text-input" class="form-control-label">Nombre de
+                                                        <label for="name" class="form-control-label">Nombre de
                                                             la campana</label>
                                                         <input class="form-control" type="text" name="name">
 
@@ -37,10 +37,11 @@
 
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    {{-- <div class="form-group">
                                                         <label for="example-text-input"
                                                             class="form-control-label">Plantillas a utilizar</label>
-                                                        <select class="form-select" name="templates_id[]" multiple>
+                                                        <select class="form-select" name="templates_id[]" multiple
+                                                            size="7">
                                                             @foreach ($templates as $template)
                                                                 <option value="{{ $template->id }}">
                                                                     {{ $template->name . ' - ' . $template->channel->name }}
@@ -54,10 +55,132 @@
                                                             </div>
                                                         @endif
 
-                                                    </div>
+                                                    </div> --}}
+
+                                                    @if ($templates->count() > 0)
+                                                        @php
+                                                            // Agrupar los templates por channel_id
+                                                            $templatesGroupedByChannel = $templates->groupBy(
+                                                                'channel_id',
+                                                            );
+                                                        @endphp
+
+
+                                                        @foreach ($templatesGroupedByChannel as $channel_id => $templatesGroup)
+                                                            <label for="template_{{ $channel_id }}">Select for Channel
+                                                                {{ $channel_id }}</label>
+                                                            <select id="template_{{ $channel_id }}"
+                                                                name="templates[{{ $channel_id }}]">
+                                                                <option value="">Seleccione una plantilla</option>
+                                                                @foreach ($templatesGroup as $template)
+                                                                    <option value="{{ $template->id }}">
+                                                                        {{ $template->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @endforeach
+                                                    @endif
+
+
+                                                    {{-- @if ($templates->count() > 0)
+                                                        @php
+                                                            $templatesGroupedByChannel = $templates->groupBy(
+                                                                'channel_id',
+                                                            );
+                                                        @endphp
+
+                                                        @foreach ($templatesGroupedByChannel as $channel_id => $templatesGroup)
+                                                            <div class="form-group">
+                                                                <label class="form-control-label"
+                                                                    for="template_{{ $channel_id }}">Plantillas de
+                                                                    {{ $templatesGroup[0]->channel->name }}
+                                                                </label>
+                                                                <select class="form-select"
+                                                                    id="template_{{ $channel_id }}"
+                                                                    name="template_{{ $channel_id }}">
+                                                                    <option value="">Seleccione una plantilla</option>
+                                                                    @foreach ($templatesGroup as $template)
+                                                                        <option value="{{ $template->id }}">
+                                                                            {{ $template->name . ' - ' . $template->channel->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif --}}
 
 
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="query" class="form-control-label">Consulta</label>
+                                                        <select class="form-select" name="query">
+                                                            <option value="">Seleccione una consulta</option>
+                                                            @foreach ($queries as $query)
+                                                                <option value="{{ $query->id }}">
+                                                                    {{ $query->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+
+                                                        @if ($errors->has('query'))
+                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                role="alert">{{ $errors->first('query') }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="example-text-input" class="form-control-label">Dias
+                                                                de
+                                                                la campana</label>
+                                                            <select class="form-select" name="days[]" multiple
+                                                                size="7">
+                                                                <option value="lunes">Lunes</option>
+                                                                <option value="martes">Martes</option>
+                                                                <option value="miercoles">Miercoles</option>
+                                                                <option value="jueves">Jueves</option>
+                                                                <option value="viernes">Viernes</option>
+                                                                <option value="sabado">Sabado</option>
+                                                                <option value="domingo">Domingo</option>
+                                                            </select>
+                                                            @if ($errors->has('days'))
+                                                                <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                    role="alert">{{ $errors->first('days') }}
+                                                                </div>
+                                                            @endif
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="example-text-input"
+                                                                class="form-control-label">Horario
+                                                                de la campana</label>
+                                                            <input class="form-control" type="time" name="hour">
+                                                            @if ($errors->has('hour'))
+                                                                <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                    role="alert">{{ $errors->first('hour') }}
+                                                                </div>
+                                                            @endif
+
+                                                        </div>
+
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" name="is_active" type="checkbox"
+                                                                id="is_active" checked>
+                                                            <label class="form-check-label" for="is_active">Activo</label>
+                                                            @if ($errors->has('is_active'))
+                                                                <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                    role="alert">{{ $errors->first('is_active') }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </form>

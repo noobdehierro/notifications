@@ -9,7 +9,7 @@ class Campaign extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'query_id', 'days', 'hour', 'status'];
+    protected $fillable = ['name', 'query_id', 'days', 'hour', 'is_active'];
 
     public function queryRelation()
     {

@@ -1,5 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
-
+@push('meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Plantillas'])
     <div class="container-fluid py-4">
@@ -10,8 +12,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">
-                                    <form role="form" method="POST" action={{ route('templates.update', $template->id) }}
-                                        enctype="multipart/form-data">
+                                    <form role="form" method="POST"
+                                        action={{ route('templates.update', $template->id) }} enctype="multipart/form-data">
                                         @csrf
                                         <div class="card-header pb-0">
                                             <div class="d-flex align-items-center">
@@ -41,7 +43,7 @@
                                                     <div class="form-group">
                                                         <label for="example-text-input" class="form-control-label">Nombre
                                                             del Canal</label>
-                                                        <select class="form-select" name="channel_id">
+                                                        <select class="form-select" name="channel_id" id="channel_id">
                                                             @foreach ($channels as $channel)
                                                                 @if ($channel->id == $template->channel_id)
                                                                     <option value="{{ $channel->id }}" selected>
@@ -65,7 +67,7 @@
                                                         <label for="example-text-input"
                                                             class="form-control-label">Contenido</label>
 
-                                                        <textarea class="form-control" name="placeholder" id="exampleFormControlTextarea1" rows="3">{{ $template->placeholder }}</textarea>
+                                                        <textarea class="form-control" name="placeholder" id="placeholder" rows="3">{{ $template->placeholder }}</textarea>
 
                                                         @if ($errors->has('placeholder'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
@@ -91,4 +93,60 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('get-chanel') }}",
+                data: {
+                    channel_id: $("#channel_id").val(),
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log(response.max_characters);
+
+                    // $("#content").attr('hidden', false);
+
+                    $("#placeholder").attr('maxlength', response.max_characters);
+
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+
+            });
+
+            $("#channel_id").change(function() {
+                $("#placeholder").val("");
+                if ($(this).val() != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('get-chanel') }}",
+                        data: {
+                            channel_id: $(this).val(),
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            console.log(response.max_characters);
+
+                            $("#content").attr('hidden', false);
+
+                            $("#placeholder").attr('maxlength', response.max_characters);
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(xhr.responseText);
+                        }
+
+                    });
+                } else {
+                    $("#content").attr('hidden', true);
+                }
+            });
+        });
+    </script>
 @endsection

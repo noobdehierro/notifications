@@ -21,19 +21,13 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <p class="text-uppercase text-sm">Informacion De Campaña</p>
+                                            <p class="text-uppercase text-sm">Informacion Del Query</p>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="example-text-input"
-                                                            class="form-control-label">Campaña</label>
-                                                        <select class="form-select" name="campaign_id">
-                                                            @foreach ($campaigns as $campaign)
-                                                                <option value="{{ $campaign->id }}">
-                                                                    {{ $campaign->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                            class="form-control-label">Nombre</label>
+                                                        <input class="form-control" type="text" name="name">
 
                                                         @if ($errors->has('name'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
@@ -44,13 +38,13 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="example-text-input" class="form-control-label">Hora de
-                                                            envio</label>
-                                                        <input class="form-control" type="time" name="sent_at">
+                                                        <label for="example-text-input"
+                                                            class="form-control-label">Consulta</label>
+                                                        <input class="form-control" type="text" name="query">
 
-                                                        @if ($errors->has('sent_at'))
+                                                        @if ($errors->has('query'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
-                                                                role="alert">{{ $errors->first('sent_at') }}
+                                                                role="alert">{{ $errors->first('query') }}
                                                             </div>
                                                         @endif
 

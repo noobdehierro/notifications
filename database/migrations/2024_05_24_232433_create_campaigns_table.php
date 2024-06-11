@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('query_id');
             $table->string('days');
             $table->string('hour');
-            $table->string('status');
+            $table->boolean('is_active');
             $table->timestamps();
 
             $table->foreign('query_id')->references('id')->on('queries')->onDelete('cascade');
