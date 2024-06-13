@@ -45,11 +45,14 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $templatesId = array_filter($request->input('templates_id'));
+        $request->merge(['templates_id' => $templatesId]);
+
+
         $attributes = $request->validate([
             "name" => "required|unique:campaigns",
             "query" => "required",
-            "templates_id" => "required",
+            'templates_id' => 'required|array|min:1',
             "days" => "required",
             "hour" => "required",
             'is_active' => ['nullable', 'in:on,off'],
