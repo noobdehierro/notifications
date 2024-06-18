@@ -11,9 +11,9 @@ class Campaign extends Model
 
     protected $fillable = ['name', 'query_id', 'days', 'hour', 'is_active'];
 
-    public function queryRelation()
+    public function querydata()
     {
-        return $this->belongsTo(Query::class);
+        return $this->belongsTo(Query::class, 'query_id');
     }
 
     public function templates()

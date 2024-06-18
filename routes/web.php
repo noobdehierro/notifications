@@ -99,3 +99,11 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::post('/get-chanel', [ChannelController::class, 'getChannel'])->name('get-chanel');
+
+Route::get('/token', function () {
+	// return json_encode(getNexusConfig());
+
+	$token = getNexusResponse('queries/before_suspention');
+
+	return response()->json($token);
+});

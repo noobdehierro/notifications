@@ -35,7 +35,7 @@
                                                             </div>
                                                         @endif
                                                     </div>
-                                                    @if ($errors->any())
+                                                    {{-- @if ($errors->any())
                                                         <div class="alert alert-danger alert-dismissible fade show mt-1"
                                                             role="alert">
                                                             <ul class="mb-0">
@@ -44,7 +44,7 @@
                                                                 @endforeach
                                                             </ul>
                                                         </div>
-                                                    @endif
+                                                    @endif --}}
 
 
                                                     @if ($templates->count() > 0)
@@ -84,8 +84,8 @@
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="query" class="form-control-label">Consulta</label>
-                                                        <select class="form-select" name="query">
+                                                        <label for="query_id" class="form-control-label">Consulta</label>
+                                                        <select class="form-select" name="query_id">
                                                             <option value="">Seleccione una consulta</option>
                                                             @foreach ($queries as $query)
                                                                 <option value="{{ $query->id }}">
@@ -93,10 +93,10 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                        @if ($errors->has('query'))
+                                                        @if ($errors->has('query_id'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
                                                                 role="alert">
-                                                                {{ $errors->first('query') }}
+                                                                {{ $errors->first('query_id') }}
                                                             </div>
                                                         @endif
                                                     </div>
@@ -109,13 +109,13 @@
                                                         <label for="days" class="form-control-label">Días de la
                                                             campaña</label>
                                                         <select class="form-select" name="days[]" multiple size="7">
-                                                            <option value="lunes">Lunes</option>
-                                                            <option value="martes">Martes</option>
-                                                            <option value="miércoles">Miércoles</option>
-                                                            <option value="jueves">Jueves</option>
-                                                            <option value="viernes">Viernes</option>
-                                                            <option value="sábado">Sábado</option>
-                                                            <option value="domingo">Domingo</option>
+                                                            <option value="monday">Lunes</option>
+                                                            <option value="tuesday">Martes</option>
+                                                            <option value="wednesday">Miércoles</option>
+                                                            <option value="thursday">Jueves</option>
+                                                            <option value="friday">Viernes</option>
+                                                            <option value="saturday">Sábado</option>
+                                                            <option value="sunday">Domingo</option>
                                                         </select>
                                                         @if ($errors->has('days'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"

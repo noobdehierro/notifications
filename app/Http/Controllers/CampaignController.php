@@ -21,7 +21,9 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = Campaign::all();
+        // $campaigns = Campaign::all();
+        $campaigns = Campaign::with('templates')->get();
+        // dd($campaigns);
         return view("pages.campaigns.index", compact("campaigns"));
     }
 
@@ -46,24 +48,28 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
         $templatesId = array_filter($request->input('templates_id'));
+        $templatesId = array_values($templatesId); // Reindexa los elementos
         $request->merge(['templates_id' => $templatesId]);
 
-
         $attributes = $request->validate([
-            "name" => "required|unique:campaigns",
-            "query" => "required",
-            'templates_id' => 'required|array|min:1',
-            "days" => "required",
-            "hour" => "required",
-            'is_active' => ['nullable', 'in:on,off'],
+            'name' => 'required|string|unique:campaigns,name',
+            'query_id' => 'required|exists:queries,id',
+            'days' => 'required|array',
+            'hour' => 'required|string',
+            'is_active' => 'nullable|in:on,off',
+            'templates_id' => 'required|array'
         ]);
-
+        $attributes['days'] = json_encode($attributes['days']);
         $attributes['is_active'] = $request->is_active == 'on';
 
-        dd($attributes);
-
         try {
-            Campaign::create($request->all());
+            $campaign = Campaign::create($attributes);
+
+            if ($request->has('templates_id')) {
+                // dd($request->templates_id);
+                $campaign->templates()->sync($request->templates_id);
+            }
+
             return redirect()->route('campaigns.index')->with('success', 'Campaign created successfully.');
         } catch (\Throwable $th) {
             return redirect()->route('campaigns.index')->with('error', $th->getMessage());
@@ -89,10 +95,13 @@ class CampaignController extends Controller
      */
     public function edit(Campaign $campaign)
     {
-        $templates = Template::all();
+        $campaign = $campaign->load('templates'); // Cargar la relación 'templates'
 
-        return view("pages.campaigns.edit", compact("campaign", "templates"));
+        $templates = Template::all();
+        $queries = Query::all();
+        return view("pages.campaigns.edit", compact("campaign", "templates", "queries"));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -103,15 +112,30 @@ class CampaignController extends Controller
      */
     public function update(Request $request, Campaign $campaign)
     {
-        $request->validate([
-            "name" => "required|unique:campaigns,name," . $campaign->id,
+
+        $templatesId = array_filter($request->input('templates_id'));
+        $templatesId = array_values($templatesId); // Reindexa los elementos
+        $request->merge(['templates_id' => $templatesId]);
+
+        $attributes = $request->validate([
+            'name' => 'required|string|unique:campaigns,name,' . $campaign->id,
+            'query_id' => 'required|exists:queries,id',
+            'days' => 'required|array',
+            'hour' => 'required|string',
+            'is_active' => 'nullable|in:on,off',
+            'templates_id' => 'required|array'
         ]);
+        $attributes['days'] = json_encode($attributes['days']);
+        $attributes['is_active'] = $request->is_active == 'on';
 
         try {
-            $campaign->update($request->all());
+            $campaign->update($attributes);
+            if ($request->has('templates_id')) {
+                $campaign->templates()->sync($request->templates_id);
+            }
             return redirect()->route('campaigns.index')->with('success', 'Campaign updated successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('campaigns.index')->with('error', $e->getMessage());
+        } catch (\Throwable $th) {
+            return redirect()->route('campaigns.index')->with('error', $th->getMessage());
         }
     }
 

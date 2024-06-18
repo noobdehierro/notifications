@@ -30,14 +30,14 @@ class ConfigurationSeeder extends Seeder
                 'value' => 'jreyes@saycocorporativo.com',
             ],
             [
-                'label' => 'Placeholder Endpoint',
-                'code' => 'placeholder_endpoint',
-                'value' => 'https://jsonplaceholder.typicode.com/',
+                'label' => 'Nexus Endpoint',
+                'code' => 'nexus_endpoint',
+                'value' => 'http://nexus.test/v1/',
             ],
             [
-                'label' => 'Placeholder Endpoint sandbox',
-                'code' => 'placeholder_endpoint_sandbox',
-                'value' => 'https://jsonplaceholder.typicode.com/',
+                'label' => 'Nexus Endpoint sandbox',
+                'code' => 'nexus_endpoint_sandbox',
+                'value' => 'http://nexus.test/v1/',
             ],
         ];
 
