@@ -1,8 +1,11 @@
 <?php
 
+use App\Mail\Notification;
 use App\Models\Campaign;
 use App\Models\Configuration;
 use App\Models\Recipient;
+use Aws\Exception\AwsException;
+use Aws\Sns\SnsClient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -54,8 +57,6 @@ function getNexusConfig()
     $response = Http::get($endpoint . "token", [
         "client_token" => $token
     ]);
-
-    // return $response->json();
 
     $responseObject = json_decode($response);
 
@@ -119,66 +120,80 @@ function getNexusResponse()
         ]);
     }
 
-    return response()->json($campaign, 201);
+    return response()->json($customResponse, 201);
 }
 
 
-function sendSms($to, $message)
+function sendNotification()
 {
+
+    $recipients = Recipient::all()->take(2);
+
+    foreach ($recipients as $key => $recipient) {
+        // echo $recipient->campaign->templates[$key];
+        // echo $recipient->campaign->templates;
+        foreach ($recipient->campaign->templates as $template) {
+            // echo $template->channel;
+            // if ($template->channel->name == 'WhatsApp') {
+            //     if ($recipient->msisdn) {
+            //         // echo 'whatsapp send to ' . $recipient->msisdn . ' ' . $template->title . ' ' . $template->body . PHP_EOL;
+            //         echo sendWhatsapp($recipient->msisdn, $template->placeholder, $template->name, $recipient->name) . PHP_EOL;
+            //     }
+            // }
+            // if ($template->channel->name == 'SMS') {
+            //     if ($recipient->msisdn) {
+            //         echo 'sms';
+            //         echo sendSms($recipient->msisdn, $template->placeholder) . PHP_EOL;
+            //     }
+            // }
+            // if ($template->channel->name == 'Email') {
+            //     if ($recipient->email) {
+            //         sendEmail($recipient->email, $template->placeholder, $template->name, $recipient->name);
+            //     }
+            // }
+        }
+    }
+
+    return response()->json('Enviado', 201);
+}
+
+function sendWhatsapp($to, $message, $campaignName, $name = 'unknown')
+{
+    // dd($to, $message, $campaignName);
+    // Mail::to('example@gmail.com')->send(new Notification());
+    Mail::to($to . '@gmail.com')->send(new Notification($name, $message, $campaignName));
+    return 'Whatsapp send to ' . $to . ' ' . $message . ' ' . $campaignName;
+}
+
+function sendSms($msisdn, $message)
+{
+    // dd($msisdn, $message);
+    $SnSclient = new SnsClient([
+        'region' => env('AWS_DEFAULT_REGION'),
+        'version' => '2010-03-31',
+        'credentials' => [
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        ]
+    ]);
+
+    $message = $message;
+    // $phone = '5522439861';
+    $phone = $msisdn;
     try {
-        $to = $to;
-        $subject = 'Asunto del correo del tipo SMS';
-        $body = $message;
-
-        Mail::html($body, function ($message) use ($to, $subject) {
-            $message->to($to)
-                ->subject($subject);
-        });
-
-        // Log::info("Correo enviado correctamente a $to");
-        return true;
-    } catch (\Exception $e) {
-        // Log::error("Error al enviar el correo: " . $e->getMessage());
-        return false;
+        $result = $SnSclient->publish([
+            'Message' => $message,
+            'PhoneNumber' => '+52' . $phone,
+        ]);
+        return $result;
+    } catch (AwsException $e) {
+        return $e->getMessage();
     }
 }
 
-function sendEmail($to, $message)
+function sendEmail($to, $message, $campaignName, $name = 'unknown')
 {
-    try {
-        $to = $to;
-        $subject = 'Asunto del correo del tipo Email';
-        $body = $message;
+    $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
 
-        Mail::html($body, function ($message) use ($to, $subject) {
-            $message->to($to)
-                ->subject($subject);
-        });
-
-        // Log::info("Correo enviado correctamente a $to");
-        return true;
-    } catch (\Exception $e) {
-        // Log::error("Error al enviar el correo: " . $e->getMessage());
-        return false;
-    }
-}
-
-function sendWhatsapp($to, $message)
-{
-    try {
-        $to = $to;
-        $subject = 'Asunto del correo del tipo Whatsapp';
-        $body = $message;
-
-        Mail::html($body, function ($message) use ($to, $subject) {
-            $message->to($to)
-                ->subject($subject);
-        });
-
-        // Log::info("Correo enviado correctamente a $to");
-        return true;
-    } catch (\Exception $e) {
-        // Log::error("Error al enviar el correo: " . $e->getMessage());
-        return false;
-    }
+    return $response;
 }

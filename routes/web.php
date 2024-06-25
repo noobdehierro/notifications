@@ -103,7 +103,9 @@ Route::post('/get-chanel', [ChannelController::class, 'getChannel'])->name('get-
 Route::get('/token', function () {
 	// return json_encode(getNexusConfig());
 
-	$token = getNexusResponse('queries/before_suspention');
+	// $token = getNexusResponse('queries/before_suspention');
+
+	$token = sendNotification();
 
 	return response()->json($token);
 });
