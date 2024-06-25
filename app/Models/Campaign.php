@@ -20,4 +20,9 @@ class Campaign extends Model
     {
         return $this->belongsToMany(Template::class, 'campaign_template');
     }
+
+    public function recipients()
+    {
+        return $this->hasMany(Recipient::class);
+    }
 }

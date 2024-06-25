@@ -2,6 +2,7 @@
 
 use App\Models\Campaign;
 use App\Models\Configuration;
+use App\Models\Recipient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -97,52 +98,30 @@ function getNexusResponse()
     // Toma solo los primeros 5 elementos
     $limitedCollection = $collection->take(5);
 
-    // Inicializa dos arrays para almacenar los emails y los msisdn
-    $emails = [];
-    $msisdns = [];
+    // return response()->json($limitedCollection);
 
-    // Itera sobre los elementos limitados y separa los emails y los msisdns
-    $limitedCollection->each(function ($item) use (&$emails, &$msisdns) {
-        if (isset($item['email'])) {
-            $emails[] = $item['email'];
-        }
-        if (isset($item['msisdn'])) {
-            $msisdns[] = $item['msisdn'];
-        }
+    $customResponse = $limitedCollection->map(function ($item) {
+        return [
+            'email' => $item['email'] ?? null,
+            'msisdn' => $item['msisdn'] ?? null,
+            'name' => $item['name'] ?? 'cliente'
+        ];
     });
 
+    // return response()->json($customResponse);
 
-
-    foreach ($campaign->templates as $template) {
-        if ($template->channel->name == 'SMS') {
-            echo "Enviando SMS";
-
-            if (count($msisdns) > 0) {
-                sendSms($msisdns, $template->placeholder);
-            }
-        }
-
-        if ($template->channel->name == 'Email') {
-            echo "Enviando Email";
-
-            if (count($emails) > 0) {
-                sendEmail($emails, $template->placeholder);
-            }
-        }
-
-        if ($template->channel->name == 'WhatsApp') {
-            echo "Enviando Whatsapp";
-
-            if (count($emails) > 0) {
-                sendWhatsapp($emails, $template->placeholder);
-            }
-        }
+    foreach ($customResponse as $recipient) {
+        Recipient::create([
+            'name' => $recipient['name'],
+            'campaign_id' => $campaign->id,
+            'email' => $recipient['email'],
+            'msisdn' => $recipient['msisdn']
+        ]);
     }
-    dd($emails, $msisdns);
-    // if (count($emails) > 0) {
-    //     sendEmail($emails, $campaign->templates->placeholder);
-    // }
+
+    return response()->json($campaign, 201);
 }
+
 
 function sendSms($to, $message)
 {
