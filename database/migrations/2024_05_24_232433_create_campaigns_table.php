@@ -23,6 +23,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('query_id')->references('id')->on('queries')->onDelete('cascade');
+
+            $table->unique(['days', 'hour']);
         });
     }
 

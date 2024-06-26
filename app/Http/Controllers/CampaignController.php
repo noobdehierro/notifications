@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rule;
 
 class CampaignController extends Controller
 {
@@ -54,7 +55,15 @@ class CampaignController extends Controller
         $attributes = $request->validate([
             'name' => 'required|string|unique:campaigns,name',
             'query_id' => 'required|exists:queries,id',
-            'days' => 'required|array',
+            // 'days' => 'required|array',
+            // 'hour' => 'required|string',
+            'days' => [
+                'required',
+                'array',
+                Rule::unique('campaigns')->where(function ($query) use ($request) {
+                    return $query->where('hour', $request->hour);
+                }),
+            ],
             'hour' => 'required|string',
             'is_active' => 'nullable|in:on,off',
             'templates_id' => 'required|array'

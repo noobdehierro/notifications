@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(ConfigurationSeeder::class);
+        $this->call(ChannelsTableSeeder::class);
+        $this->call(TemplatesTableSeeder::class);
+        $this->call(QueriesTableSeeder::class);
     }
 }

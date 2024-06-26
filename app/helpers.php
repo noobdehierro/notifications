@@ -12,162 +12,213 @@ use Illuminate\Support\Facades\Mail;
 
 function getNexusConfig()
 {
-    $configuration = Configuration::whereIn('code', [
-        'is_sandbox',
-        'nexus_token',
-        'nexus_token_sandbox',
-        'nexus_endpoint',
-        'nexus_endpoint_sandbox'
-    ])->get();
+    try {
+        $configuration = Configuration::whereIn('code', [
+            'is_sandbox',
+            'nexus_token',
+            'nexus_token_sandbox',
+            'nexus_endpoint',
+            'nexus_endpoint_sandbox'
+        ])->get();
 
-    $is_sandbox = null;
-    $nexus_token = null;
-    $nexus_token_sandbox = null;
-    $nexus_endpoint = null;
-    $nexus_endpoint_sandbox = null;
+        $configMap = $configuration->pluck('value', 'code');
 
-    foreach ($configuration as $config) {
-        switch ($config->code) {
-            case 'is_sandbox':
-                $is_sandbox = $config->value;
-                break;
-            case 'nexus_token':
-                $nexus_token = $config->value;
-                break;
-            case 'nexus_token_sandbox':
-                $nexus_token_sandbox = $config->value;
-                break;
-            case 'nexus_endpoint':
-                $nexus_endpoint = $config->value;
-                break;
-            case 'nexus_endpoint_sandbox':
-                $nexus_endpoint_sandbox = $config->value;
-                break;
+        $is_sandbox = $configMap['is_sandbox'] ?? null;
+        $nexus_token = $configMap['nexus_token'] ?? null;
+        $nexus_token_sandbox = $configMap['nexus_token_sandbox'] ?? null;
+        $nexus_endpoint = $configMap['nexus_endpoint'] ?? null;
+        $nexus_endpoint_sandbox = $configMap['nexus_endpoint_sandbox'] ?? null;
+
+        if (is_null($is_sandbox) || is_null($nexus_token) || is_null($nexus_token_sandbox) || is_null($nexus_endpoint) || is_null($nexus_endpoint_sandbox)) {
+            throw new Exception('Missing Nexus configuration values');
         }
+
+        $endpoint = $is_sandbox ? $nexus_endpoint_sandbox : $nexus_endpoint;
+        $token = $is_sandbox ? $nexus_token_sandbox : $nexus_token;
+
+        $response = Http::get($endpoint . "token", [
+            "client_token" => $token
+        ]);
+
+        $responseObject = json_decode($response);
+
+        if (isset($responseObject->error)) {
+            throw new Exception('Error retrieving token: ' . $responseObject->error);
+        }
+
+        return [
+            'endpoint' => $endpoint,
+            'token' => $responseObject->data->access_token
+        ];
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
-
-    if ($is_sandbox) {
-        $endpoint = $nexus_endpoint_sandbox;
-        $token = $nexus_token_sandbox;
-    } else {
-        $endpoint = $nexus_endpoint;
-        $token = $nexus_token;
-    }
-
-    $response = Http::get($endpoint . "token", [
-        "client_token" => $token
-    ]);
-
-    $responseObject = json_decode($response);
-
-    return ([
-        'endpoint' => $endpoint,
-        'token' => $responseObject->data->access_token
-    ]);
 }
 
 function getNexusResponse()
 {
-    $currentDateTime = Carbon::now();
-    $hourAndMinute = $currentDateTime->format('H:i');
-    $dayOfWeek = strtolower($currentDateTime->englishDayOfWeek);
-    // $dayOfWeek = 'wednesday';
+    try {
+        $currentDateTime = Carbon::now();
+        $hourAndMinute = $currentDateTime->format('H:i');
+        $dayOfWeek = strtolower($currentDateTime->englishDayOfWeek);
 
-    $campaign = Campaign::with('templates')
-        ->where('days', 'like', '%' . $dayOfWeek . '%')
-        ->where('is_active', 1)
-        ->first();
+        // $campaign = Campaign::with('templates')
+        //     ->where('days', 'like', '%' . $dayOfWeek . '%')
+        //     ->where('is_active', 1)
+        //     ->first();
+        // dd($dayOfWeek);
+        $campaign = Campaign::with('templates')
+            ->where('days', 'like', '%' . $dayOfWeek . '%')
+            ->where('is_active', 1)
+            ->where('hour', $hourAndMinute)
+            ->first();
+        // dd($campaign);
 
-    $nexusConfig = getNexusConfig();
+        if (is_null($campaign)) {
+            throw new Exception('No active campaign found for today');
+        }
 
-    $token = $nexusConfig['token'];
-    $endpoint = $nexusConfig['endpoint'];
+        $nexusConfig = getNexusConfig();
 
-    // $response = Http::withHeaders([
-    //     'Authorization' => 'Bearer ' . $token
-    // ])->get($endpoint . $campaign->querydata->query);
+        if (isset($nexusConfig['error'])) {
+            throw new Exception($nexusConfig['error']);
+        }
 
-    // return $response->json();
+        $token = $nexusConfig['token'];
+        $endpoint = $nexusConfig['endpoint'];
 
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . $token
-    ])->get($endpoint . $campaign->querydata->query);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->get($endpoint . $campaign->querydata->query);
 
-    // Convierte la respuesta JSON a una colección de Laravel
-    $collection = collect($response->json());
+        $collection = collect($response->json());
 
-    // Toma solo los primeros 5 elementos
-    $limitedCollection = $collection->take(5);
+        if ($collection->isEmpty()) {
+            throw new Exception('No data found from Nexus API');
+        }
 
-    // return response()->json($limitedCollection);
+        $limitedCollection = $collection->take(10);
 
-    $customResponse = $limitedCollection->map(function ($item) {
-        return [
-            'email' => $item['email'] ?? null,
-            'msisdn' => $item['msisdn'] ?? null,
-            'name' => $item['name'] ?? 'cliente'
-        ];
-    });
+        $customResponse = $limitedCollection->map(function ($item) {
+            return [
+                'email' => $item['email'] ?? null,
+                'msisdn' => $item['msisdn'] ?? null,
+                'name' => $item['name'] ?? 'cliente'
+            ];
+        });
 
-    // return response()->json($customResponse);
+        foreach ($customResponse as $recipient) {
+            Recipient::create([
+                'name' => $recipient['name'],
+                'campaign_id' => $campaign->id,
+                'email' => $recipient['email'],
+                'msisdn' => $recipient['msisdn']
+            ]);
+        }
 
-    foreach ($customResponse as $recipient) {
-        Recipient::create([
-            'name' => $recipient['name'],
-            'campaign_id' => $campaign->id,
-            'email' => $recipient['email'],
-            'msisdn' => $recipient['msisdn']
-        ]);
+        return response()->json($customResponse, 201);
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
-
-    return response()->json($customResponse, 201);
 }
-
 
 function sendNotification()
 {
+    try {
+        $recipients = Recipient::all()->take(2);
+        $msisdnExamples = [
+            '5542762991',
+            '5632137142'
+        ];
 
-    $recipients = Recipient::all()->take(2);
+        foreach ($recipients as $key => $recipient) {
+            if (isset($msisdnExamples[$key])) {
+                $recipient->msisdn = $msisdnExamples[$key];
+            }
 
-    foreach ($recipients as $key => $recipient) {
-        // echo $recipient->campaign->templates[$key];
-        // echo $recipient->campaign->templates;
-        foreach ($recipient->campaign->templates as $template) {
-            // echo $template->channel;
-            // if ($template->channel->name == 'WhatsApp') {
-            //     if ($recipient->msisdn) {
-            //         // echo 'whatsapp send to ' . $recipient->msisdn . ' ' . $template->title . ' ' . $template->body . PHP_EOL;
-            //         echo sendWhatsapp($recipient->msisdn, $template->placeholder, $template->name, $recipient->name) . PHP_EOL;
-            //     }
-            // }
-            // if ($template->channel->name == 'SMS') {
-            //     if ($recipient->msisdn) {
-            //         echo 'sms';
-            //         echo sendSms($recipient->msisdn, $template->placeholder) . PHP_EOL;
-            //     }
-            // }
-            // if ($template->channel->name == 'Email') {
-            //     if ($recipient->email) {
-            //         sendEmail($recipient->email, $template->placeholder, $template->name, $recipient->name);
-            //     }
-            // }
+            foreach ($recipient->campaign->templates as $template) {
+                if ($template->channel->name == 'Email' && $recipient->email) {
+                    echo sendEmail($recipient->email, $template->placeholder, $template->name, $recipient->name);
+                }
+                if ($template->channel->name == 'WhatsApp' && $recipient->msisdn) {
+                    echo sendWhatsapp($recipient->msisdn, $template->placeholder);
+                }
+                if ($template->channel->name == 'SMS' && $recipient->msisdn) {
+                    echo sendSms($recipient->msisdn, $template->placeholder);
+                }
+            }
+
+            $recipient->delete();
         }
-    }
 
-    return response()->json('Enviado', 201);
+        return response()->json('Enviado', 201);
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 }
 
-function sendWhatsapp($to, $message, $campaignName, $name = 'unknown')
+function sendEmail($to, $message, $campaignName, $name = 'unknown')
 {
-    // dd($to, $message, $campaignName);
-    // Mail::to('example@gmail.com')->send(new Notification());
-    Mail::to($to . '@gmail.com')->send(new Notification($name, $message, $campaignName));
-    return 'Whatsapp send to ' . $to . ' ' . $message . ' ' . $campaignName;
+    try {
+        Mail::to($to)->send(new Notification($name, $message, $campaignName));
+        return 'Email sent successfully';
+    } catch (Exception $e) {
+        return 'Failed to send email: ' . $e->getMessage();
+    }
+}
+
+function sendWhatsapp($msisdn, $message)
+{
+    try {
+        $configuration = Configuration::whereIn('code', [
+            'whatsapp_token',
+            'id_phone_number_whatsapp',
+            'api_whatsapp',
+        ])->get();
+
+        $configMap = $configuration->pluck('value', 'code');
+        $whatsapp_token = $configMap['whatsapp_token'];
+        $id_phone_number_whatsapp = $configMap['id_phone_number_whatsapp'];
+        $api_whatsapp = $configMap['api_whatsapp'];
+
+        $url = $api_whatsapp . $id_phone_number_whatsapp . '/messages';
+        $client = new GuzzleHttp\Client();
+
+        $response = $client->request('POST', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $whatsapp_token,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => '52' . $msisdn,
+                'type' => 'template',
+                'template' => [
+                    'name' => 'hello_world',
+                    'language' => [
+                        'code' => 'en_US',
+                    ],
+                ],
+            ],
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => json_decode($response->getBody(), true),
+        ]);
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 }
 
 function sendSms($msisdn, $message)
 {
-    // dd($msisdn, $message);
+
+    if ($msisdn == '5542762991') {
+        $msisdn = '5612377086';
+    }
+
     $SnSclient = new SnsClient([
         'region' => env('AWS_DEFAULT_REGION'),
         'version' => '2010-03-31',
@@ -177,23 +228,13 @@ function sendSms($msisdn, $message)
         ]
     ]);
 
-    $message = $message;
-    // $phone = '5522439861';
-    $phone = $msisdn;
     try {
         $result = $SnSclient->publish([
             'Message' => $message,
-            'PhoneNumber' => '+52' . $phone,
+            'PhoneNumber' => '+52' . $msisdn,
         ]);
         return $result;
     } catch (AwsException $e) {
         return $e->getMessage();
     }
-}
-
-function sendEmail($to, $message, $campaignName, $name = 'unknown')
-{
-    $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
-
-    return $response;
 }

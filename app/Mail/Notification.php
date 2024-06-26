@@ -39,7 +39,7 @@ class Notification extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Notification',
+            subject: $this->campaignName,
         );
     }
 
