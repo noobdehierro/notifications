@@ -35,10 +35,10 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Query</th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Plantillas</th>
                                         <th
-                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Día</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -67,7 +67,7 @@
                                                 <p class="text-xs font-weight-bold mb-0">{{ $campaign->querydata->query }}
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td style="max-width: 400px; overflow: hidden; text-overflow: ellipsis;">
                                                 @if ($campaign->templates->isEmpty())
                                                     No templates
                                                 @else

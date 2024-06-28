@@ -112,7 +112,7 @@ function sendNotification()
             throw new Exception('No recipients found');
         }
 
-        $msisdnExamples = ['5542762991', '5621431502'];
+        $msisdnExamples = ['5542762991', '5542762991'];
 
         foreach ($recipients as $key => $recipient) {
             $recipient->msisdn = $msisdnExamples[$key] ?? $recipient->msisdn;
@@ -126,7 +126,7 @@ function sendNotification()
                     $responseSendEmail = sendEmail($recipient->email, $placeholder, $template->name, $recipientName);
                 }
                 if ($channelName == 'WhatsApp' && $recipient->msisdn) {
-                    $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $placeholder);
+                    $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $placeholder, $template->name, $recipientName);
                 }
                 // if ($channelName == 'SMS' && $recipient->msisdn) {
                 //     $responseSendSms = sendSms($recipient->msisdn, $placeholder);
@@ -152,7 +152,7 @@ function sendEmail($to, $message, $campaignName, $name = 'unknown')
     }
 }
 
-function sendWhatsapp($msisdn, $message)
+function sendWhatsapp($msisdn, $message, $campaignName, $name = 'unknown')
 {
     try {
         $configKeys = [
@@ -184,7 +184,7 @@ function sendWhatsapp($msisdn, $message)
                             "parameters" => [
                                 [
                                     "type" => "text",
-                                    "text" => 'titulo',
+                                    "text" => $campaignName,
                                 ]
                             ]
                         ],
@@ -193,11 +193,11 @@ function sendWhatsapp($msisdn, $message)
                             "parameters" => [
                                 [
                                     "type" => "text",
-                                    "text" => 'cliente',
+                                    "text" => $name,
                                 ],
                                 [
                                     "type" => "text",
-                                    "text" => 'mensaje',
+                                    "text" => $message,
                                 ]
                             ]
                         ]

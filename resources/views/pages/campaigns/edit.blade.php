@@ -18,7 +18,7 @@
                                             <div class="d-flex align-items-center">
                                                 <p class="mb-0">Editar Campaña</p>
                                                 <button type="submit"
-                                                    class="btn btn-primary btn-sm ms-auto">Guardar</button>
+                                                    class="btn btn-primary btn-sm ms-auto">Actualizar</button>
                                             </div>
                                         </div>
                                         <div class="card-body">
@@ -124,19 +124,19 @@
                                                                 {{ in_array('monday', $days) ? 'selected' : '' }}>
                                                                 Lunes</option>
                                                             <option value="tuesday"
-                                                                {{ in_array('tuesday"', $days) ? 'selected' : '' }}>
+                                                                {{ in_array('tuesday', $days) ? 'selected' : '' }}>
                                                                 Martes</option>
                                                             <option value="wednesday"
-                                                                {{ in_array('wednesday"', $days) ? 'selected' : '' }}>
+                                                                {{ in_array('wednesday', $days) ? 'selected' : '' }}>
                                                                 Miércoles</option>
                                                             <option value="thursday"
-                                                                {{ in_array('thursday"', $days) ? 'selected' : '' }}>
+                                                                {{ in_array('thursday', $days) ? 'selected' : '' }}>
                                                                 Jueves</option>
                                                             <option value="friday"
-                                                                {{ in_array('friday"', $days) ? 'selected' : '' }}>
+                                                                {{ in_array('friday', $days) ? 'selected' : '' }}>
                                                                 Viernes</option>
                                                             <option value="saturday"
-                                                                {{ in_array('saturday"', $days) ? 'selected' : '' }}>
+                                                                {{ in_array('saturday', $days) ? 'selected' : '' }}>
                                                                 Sábado</option>
                                                             <option value="sunday"
                                                                 {{ in_array('sunday', $days) ? 'selected' : '' }}>

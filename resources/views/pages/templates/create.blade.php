@@ -64,6 +64,8 @@
                                                             class="form-control-label">Contenido</label>
 
                                                         <textarea class="form-control" name="placeholder" id="placeholder" rows="3"></textarea>
+                                                        <span class="text-success">maximo de caracteres: <b
+                                                                id="max_characters"></b></span>
 
                                                         @if ($errors->has('placeholder'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
@@ -107,6 +109,8 @@
                             $("#content").attr('hidden', false);
 
                             $("#placeholder").attr('maxlength', response.max_characters);
+
+                            $("#max_characters").text(response.max_characters);
 
                         },
                         error: function(xhr, status, error) {

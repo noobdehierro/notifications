@@ -53,11 +53,12 @@
                                                 <p class="text-xs font-weight-bold mb-0">{{ $configuration->code }}</p>
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
                                                 <p class="text-xs text-center font-weight-bold mb-0">
-                                                    {{ $configuration->value }}</p>
+                                                    {{ $configuration->value }}
                                                 </p>
                                             </td>
+
 
                                             <td class="align-middle text-center">
                                                 <a href="{{ route('configurations.edit', $configuration->id) }}"

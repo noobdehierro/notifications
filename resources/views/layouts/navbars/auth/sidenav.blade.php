@@ -13,16 +13,16 @@
     <hr class="horizontal dark mt-0">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}"
                     href="{{ route('home') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+                        <i class="ni ni-tv-2 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
-            </li>
+            </li> --}}
             {{-- <li class="nav-item mt-3 d-flex align-items-center">
                 <div class="ps-4">
                     <i class="fab fa-laravel" style="color: #f4645f;"></i>
@@ -52,17 +52,17 @@
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pages</h6>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}"
                     href="{{ route('tables') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                        <i class="ni ni-calendar-grid-58 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Tables</span>
                 </a>
-            </li>
-            <li class="nav-item">
+            </li> --}}
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'billing') == true ? 'active' : '' }}"
                     href="{{ route('billing') }}">
                     <div
@@ -71,14 +71,14 @@
                     </div>
                     <span class="nav-link-text ms-1">Billing</span>
                 </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'channels') == true ? 'active' : '' }}"
                     href="{{ route('channels.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        <i class="ni ni-notification-70 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Canales</span>
                 </a>
@@ -89,7 +89,7 @@
                     href="{{ route('templates.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        <i class="ni ni-collection text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Plantillas</span>
                 </a>
@@ -99,7 +99,7 @@
                     href="{{ route('queries.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        <i class="ni ni-world-2 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Queries</span>
                 </a>
@@ -109,7 +109,7 @@
                     href="{{ route('campaigns.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        <i class="ni ni-calendar-grid-58 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Campañas</span>
                 </a>
@@ -132,7 +132,7 @@
                     href="{{ route('configurations.index') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+                        <i class="ni ni-settings-gear-65 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Configuraciones</span>
                 </a>
@@ -179,7 +179,7 @@
                 <a class="nav-link " href="{{ route('sign-in-static') }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
+                        <i class="ni ni-single-copy-04 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Sign In</span>
                 </a>

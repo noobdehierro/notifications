@@ -17,9 +17,9 @@
                                         @csrf
                                         <div class="card-header pb-0">
                                             <div class="d-flex align-items-center">
-                                                <p class="mb-0">Crear Plantilla</p>
+                                                <p class="mb-0">Editar Plantilla</p>
                                                 <button type="submit"
-                                                    class="btn btn-primary btn-sm ms-auto">Guardar</button>
+                                                    class="btn btn-primary btn-sm ms-auto">Actualizar</button>
                                             </div>
                                         </div>
                                         <div class="card-body">
@@ -68,7 +68,8 @@
                                                             class="form-control-label">Contenido</label>
 
                                                         <textarea class="form-control" name="placeholder" id="placeholder" rows="3">{{ $template->placeholder }}</textarea>
-
+                                                        <span class="text-success">maximo de caracteres: <b
+                                                                id="max_characters"></b></span>
                                                         @if ($errors->has('placeholder'))
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
                                                                 role="alert">{{ $errors->first('placeholder') }}
@@ -111,6 +112,8 @@
 
                     $("#placeholder").attr('maxlength', response.max_characters);
 
+                    $("#max_characters").text(response.max_characters);
+
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr.responseText);
@@ -136,6 +139,8 @@
                             $("#content").attr('hidden', false);
 
                             $("#placeholder").attr('maxlength', response.max_characters);
+
+                            $("#max_characters").text(response.max_characters);
 
                         },
                         error: function(xhr, status, error) {

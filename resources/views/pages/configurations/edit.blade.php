@@ -18,7 +18,7 @@
                                             <div class="d-flex align-items-center">
                                                 <p class="mb-0">Editar Configuración</p>
                                                 <button type="submit"
-                                                    class="btn btn-primary btn-sm ms-auto">Guardar</button>
+                                                    class="btn btn-primary btn-sm ms-auto">Actualizar</button>
                                             </div>
                                         </div>
                                         <div class="card-body">
