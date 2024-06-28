@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Campaign;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -28,21 +30,8 @@ class EnviarEmails extends Command
      */
     public function handle()
     {
-        try {
-            $to = 'XlTn3@example.com';
-            $subject = 'Asunto del correo del tipo Whatsapp';
-            $body = 'Contenido del correo del tipo Whatsapp';
 
-            Mail::html($body, function ($message) use ($to, $subject) {
-                $message->to($to)
-                    ->subject($subject);
-            });
-
-            // Log::info("Correo enviado correctamente a $to");
-            return true;
-        } catch (\Exception $e) {
-            // Log::error("Error al enviar el correo: " . $e->getMessage());
-            return false;
-        }
+        getNexusResponse();
+        sendNotification();
     }
 }
