@@ -112,10 +112,12 @@ function sendNotification()
             throw new Exception('No recipients found');
         }
 
-        $msisdnExamples = ['5542762991', '5542762991'];
+        $msisdnExamples = ['5542762991', '5581513788'];
+        $emailExamples = ['jreyes@igou.mx', 'amartinez@igou.mx'];
 
         foreach ($recipients as $key => $recipient) {
             $recipient->msisdn = $msisdnExamples[$key] ?? $recipient->msisdn;
+            $recipient->email = $emailExamples[$key] ?? $recipient->email;
 
             foreach ($recipient->campaign->templates as $template) {
                 $channelName = $template->channel->name;
@@ -128,9 +130,9 @@ function sendNotification()
                 if ($channelName == 'WhatsApp' && $recipient->msisdn) {
                     $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $placeholder, $template->name, $recipientName);
                 }
-                // if ($channelName == 'SMS' && $recipient->msisdn) {
-                //     $responseSendSms = sendSms($recipient->msisdn, $placeholder);
-                // }
+                if ($channelName == 'SMS' && $recipient->msisdn) {
+                    $responseSendSms = sendSms($recipient->msisdn, $placeholder);
+                }
             }
 
             $recipient->delete();
@@ -218,7 +220,7 @@ function sendWhatsapp($msisdn, $message, $campaignName, $name = 'unknown')
 function sendSms($msisdn, $message)
 {
     if ($msisdn == '5542762991') {
-        $msisdn = '5612377086';
+        $msisdn = '5612426571';
     }
 
     $SnSclient = new SnsClient([
