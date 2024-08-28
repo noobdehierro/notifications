@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->command('emails:enviar')->everyMinute();
+        // $schedule->command('emails:enviar')->everyMinute();
     }
 
     /**

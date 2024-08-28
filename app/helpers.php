@@ -77,7 +77,7 @@ function getNexusResponse()
             throw new Exception('No data found from Nexus API');
         }
 
-        $customResponse = $collection->take(5)->map(function ($item) {
+        $customResponse = $collection->map(function ($item) {
             return [
                 'email' => $item['email'] ?? null,
                 'msisdn' => $item['msisdn'] ?? null,
@@ -85,6 +85,16 @@ function getNexusResponse()
             ];
         });
 
+        // foreach ($customResponse as $recipient) {
+        //     Recipient::create([
+        //         'name' => $recipient['name'],
+        //         'campaign_id' => $campaign->id,
+        //         'email' => $recipient['email'],
+        //         'msisdn' => $recipient['msisdn']
+        //     ]);
+        // }
+
+        // for ($i = 0; $i < 10; $i++) {  // Se ejecutará 10 veces
         foreach ($customResponse as $recipient) {
             Recipient::create([
                 'name' => $recipient['name'],
@@ -93,6 +103,8 @@ function getNexusResponse()
                 'msisdn' => $recipient['msisdn']
             ]);
         }
+        // }
+
 
         return response()->json($customResponse, 201);
     } catch (Exception $e) {
@@ -106,18 +118,18 @@ function sendNotification()
     $responseSendWhatsapp = null;
     $responseSendSms = null;
     try {
-        $recipients = Recipient::limit(2)->get();
+        $recipients = Recipient::limit(14)->get();
 
         if ($recipients->isEmpty()) {
             throw new Exception('No recipients found');
         }
 
-        $msisdnExamples = ['5542762991', '5581513788'];
-        $emailExamples = ['jreyes@igou.mx', 'amartinez@igou.mx'];
+        // $msisdnExamples = ['5542762991', '5581513788'];
+        // $emailExamples = ['jreyes@igou.mx', 'amartinez@igou.mx'];
 
         foreach ($recipients as $key => $recipient) {
-            $recipient->msisdn = $msisdnExamples[$key] ?? $recipient->msisdn;
-            $recipient->email = $emailExamples[$key] ?? $recipient->email;
+            // $recipient->msisdn = $msisdnExamples[$key] ?? $recipient->msisdn;
+            // $recipient->email = $emailExamples[$key] ?? $recipient->email;
 
             foreach ($recipient->campaign->templates as $template) {
                 $channelName = $template->channel->name;

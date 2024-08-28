@@ -30,8 +30,15 @@ class EnviarEmails extends Command
      */
     public function handle()
     {
+        $destinatario = 'jreyes@igou.mx';
+        $asunto = 'Asunto del Correo';
+        $mensaje = 'Este es un mensaje simple sin plantilla.';
 
-        getNexusResponse();
-        sendNotification();
+        Mail::raw($mensaje, function ($message) use ($destinatario, $asunto) {
+            $message->to($destinatario)
+                ->subject($asunto);
+        });
+        // getNexusResponse();
+        // sendNotification();
     }
 }
