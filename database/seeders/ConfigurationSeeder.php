@@ -32,12 +32,12 @@ class ConfigurationSeeder extends Seeder
             [
                 'label' => 'Nexus Endpoint',
                 'code' => 'nexus_endpoint',
-                'value' => 'http://nexus.test/v1/',
+                'value' => 'https://nexus.igou.mx/v1/',
             ],
             [
                 'label' => 'Nexus Endpoint sandbox',
                 'code' => 'nexus_endpoint_sandbox',
-                'value' => 'http://nexus.test/v1/',
+                'value' => 'https://nexus.igou.mx/v1/',
             ],
             [
                 'label' => 'Nexus Token',

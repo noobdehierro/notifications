@@ -118,10 +118,10 @@ function sendNotification()
     $responseSendWhatsapp = null;
     $responseSendSms = null;
     try {
-        $recipients = Recipient::limit(14)->get();
+        $recipients = Recipient::limit(10)->get();
 
         if ($recipients->isEmpty()) {
-            throw new Exception('No recipients found');
+            return false; // No hay más datos
         }
 
         // $msisdnExamples = ['5542762991', '5581513788'];
@@ -150,9 +150,9 @@ function sendNotification()
             $recipient->delete();
         }
 
-        return response()->json(['responseSendEmail' => $responseSendEmail, 'responseSendWhatsapp' => $responseSendWhatsapp, 'responseSendSms' => $responseSendSms], 201);
+        return true; // Procesó datos
     } catch (Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+        return false; // Error
     }
 }
 
