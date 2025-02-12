@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/campaigns/edit/{campaign}', [CampaignController::class, 'edit'])->name('campaigns.edit');
 	Route::post('/campaigns/update/{campaign}', [CampaignController::class, 'update'])->name('campaigns.update');
 	Route::delete('/campaigns/destroy/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
+	Route::post('/campaigns/proof', [CampaignController::class, 'proof'])->name('campaigns.proof');
 
 	Route::get('/channels', [ChannelController::class, 'index'])->name('channels.index');
 	Route::get('/channels/create', [ChannelController::class, 'create'])->name('channels.create');

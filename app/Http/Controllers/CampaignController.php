@@ -163,4 +163,28 @@ class CampaignController extends Controller
             return redirect()->route('campaigns.index')->with('error', $e->getMessage());
         }
     }
+
+    public function proof(Request $request)
+    {
+
+        try {
+            $getTemplates = Template::whereIn('id', $request->prueba_templates_id)->get();
+            // dd($getTemplates->toArray());
+
+            foreach ($getTemplates as $template) {
+                $channelName = $template->channel->name;
+                $templatePlaceholder = $template->placeholder;
+                // dd($templatePlaceholder);
+
+                // echo $channelName . ', ' . $request->email . ', ' . $template->name . '<br>';
+                if ($channelName == 'Email' && $request->email) {
+                    sendEmail($request->email, $templatePlaceholder, $template->name);
+                }
+            }
+
+            return back()->with('success', 'Prueba enviada con exito');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
 }

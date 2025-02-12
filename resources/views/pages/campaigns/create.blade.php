@@ -2,6 +2,15 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Campaigns'])
+    @if (session()->has('success'))
+        <div id="alert">
+            @include('components.alert', ['type' => 'success', 'message' => session('success')])
+        </div>
+    @elseif (session()->has('error'))
+        <div id="alert">
+            @include('components.alert', ['type' => 'danger', 'message' => session('error')])
+        </div>
+    @endif
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -147,6 +156,98 @@
                                                             <div class="alert alert-warning alert-dismissible fade show mt-1"
                                                                 role="alert">
                                                                 {{ $errors->first('is_active') }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- @include('layouts.footers.auth.footer') --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="container-fluid py-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <form role="form" method="POST" action="{{ route('campaigns.proof') }}"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="card-header pb-0">
+                                            <div class="d-flex align-items-center">
+                                                <p class="mb-0">Probar Campaña</p>
+                                                <button type="submit"
+                                                    class="btn btn-primary btn-sm ms-auto">Mandar</button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+
+                                                    @if ($templates->count() > 0)
+                                                        @php
+                                                            $templatesGroupedByChannel = $templates->groupBy(
+                                                                'channel_id',
+                                                            );
+                                                        @endphp
+
+                                                        @foreach ($templatesGroupedByChannel as $channel_id => $templatesGroup)
+                                                            <div class="form-group">
+                                                                <label class="form-control-label"
+                                                                    for="prueba_template_{{ $channel_id }}">
+                                                                    Plantillas de {{ $templatesGroup[0]->channel->name }}
+                                                                </label>
+                                                                <select class="form-select"
+                                                                    id="prueba_template_{{ $channel_id }}"
+                                                                    name="prueba_templates_id[{{ $channel_id }}]">
+                                                                    <option value="">Seleccione una plantilla
+                                                                    </option>
+                                                                    @foreach ($templatesGroup as $template)
+                                                                        <option value="{{ $template->id }}">
+                                                                            {{ $template->name . ' - ' . $template->channel->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+
+                                                            </div>
+                                                        @endforeach
+                                                        @if ($errors->has('prueba_templates_id'))
+                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                role="alert">
+                                                                {{ $errors->first('prueba_templates_id') }}
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                </div>
+
+                                                <div class="col-md-6">
+
+                                                    <div class="form-group">
+                                                        <label for="email" class="form-control-label">Email</label>
+                                                        <input class="form-control" type="email" name="email">
+                                                        @if ($errors->has('email'))
+                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                role="alert">
+                                                                {{ $errors->first('email') }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="telefono" class="form-control-label">Telefono</label>
+                                                        <input class="form-control" type="text" name="telefono">
+                                                        @if ($errors->has('telefono'))
+                                                            <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                                role="alert">
+                                                                {{ $errors->first('telefono') }}
                                                             </div>
                                                         @endif
                                                     </div>

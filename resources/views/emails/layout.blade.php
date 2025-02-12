@@ -67,15 +67,13 @@
 
 <body>
     <div class="email-container">
-        <div class="header">
-            <h1>@yield('title')</h1>
-        </div>
         <div class="content">
             @yield('content')
+            <img src="{{ asset('img/logo-ct-dark.png') }}" alt="">
         </div>
-        <div class="footer">
+        {{-- <div class="footer">
             <p>&copy; IGOU TELECOM S.A.P.I. de C.V..</p>
-        </div>
+        </div> --}}
     </div>
 </body>
 
