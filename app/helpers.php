@@ -159,14 +159,16 @@ function sendNotification()
 function sendEmail($to, $message, $campaignName, $name = 'unknown')
 {
     try {
-        Mail::to($to)->send(new Notification($name, $message, $campaignName));
+        $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
         return 'Email sent successfully';
+        // dd($response);
     } catch (Exception $e) {
         return 'Failed to send email: ' . $e->getMessage();
+        // dd($e);
     }
 }
 
-function sendWhatsapp($msisdn, $message, $campaignName, $name = 'unknown')
+function sendWhatsapp($msisdn, $message, $campaignName, $name = '')
 {
     try {
         $configKeys = [
@@ -176,6 +178,8 @@ function sendWhatsapp($msisdn, $message, $campaignName, $name = 'unknown')
         ];
         $configurations = Configuration::whereIn('code', $configKeys)->pluck('value', 'code');
 
+        // dd($configurations['api_whatsapp'] . $configurations['id_phone_number_whatsapp'] . '/messages');
+
         $client = new Client();
         $response = $client->post($configurations['api_whatsapp'] . $configurations['id_phone_number_whatsapp'] . '/messages', [
             'headers' => [
@@ -183,22 +187,21 @@ function sendWhatsapp($msisdn, $message, $campaignName, $name = 'unknown')
                 'Content-Type' => 'application/json',
             ],
             'json' => [
-                'messaging_product' => 'whatsapp',
-                'recipient_type' => 'individual',
-                'to' => '52' . $msisdn,
-                'type' => 'template',
-                'template' => [
-                    'name' => 'avisos_igou',
-                    'language' => [
-                        'code' => 'es_MX',
+                "messaging_product" => "whatsapp",
+                "to" => "52" . $msisdn,
+                "type" => "template",
+                "template" => [
+                    "name" => "igou_notifications",
+                    "language" => [
+                        "code" => "es_MX"
                     ],
-                    'components' => [
+                    "components" => [
                         [
                             "type" => "header",
                             "parameters" => [
                                 [
                                     "type" => "text",
-                                    "text" => $campaignName,
+                                    "text" => $campaignName
                                 ]
                             ]
                         ],
@@ -207,25 +210,28 @@ function sendWhatsapp($msisdn, $message, $campaignName, $name = 'unknown')
                             "parameters" => [
                                 [
                                     "type" => "text",
-                                    "text" => $name,
+                                    "text" => $name ? $name : 'Cliente'
                                 ],
                                 [
                                     "type" => "text",
-                                    "text" => $message,
+                                    "text" => $message
                                 ]
                             ]
                         ]
-                    ],
-                ],
-            ],
+                    ]
+                ]
+            ]
         ]);
 
         return response()->json([
             'status' => 'success',
             'data' => json_decode($response->getBody(), true),
         ]);
+
+        // dd(json_decode($response->getBody(), true));
     } catch (Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
+        // dd($e->getMessage());
     }
 }
 

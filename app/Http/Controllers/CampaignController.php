@@ -176,9 +176,25 @@ class CampaignController extends Controller
                 $templatePlaceholder = $template->placeholder;
                 // dd($templatePlaceholder);
 
-                // echo $channelName . ', ' . $request->email . ', ' . $template->name . '<br>';
+                echo $channelName . ', ' . $request->email . ', ' . $template->name . '<br>';
                 if ($channelName == 'Email' && $request->email) {
                     sendEmail($request->email, $templatePlaceholder, $template->name);
+                }
+
+                if ($channelName == 'WhatsApp' && $request->telefono) {
+                    try {
+                        sendWhatsapp($request->telefono, $templatePlaceholder, $template->name);
+                    } catch (\Throwable $th) {
+                        return back()->with('error', $th->getMessage());
+                    }
+                }
+
+                if ($channelName == 'SMS' && $request->telefono) {
+                    try {
+                        sendSms($request->telefono, $templatePlaceholder);
+                    } catch (\Throwable $th) {
+                        return back()->with('error', $th->getMessage());
+                    }
                 }
             }
 
