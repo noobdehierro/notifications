@@ -62,7 +62,7 @@ class ConfigurationSeeder extends Seeder
             [
                 'label' => 'Api WhatsApp',
                 'code' => 'api_whatsapp',
-                'value' => 'https://graph.facebook.com/v19.0/',
+                'value' => 'https://graph.facebook.com/v22.0/',
             ],
         ];
 

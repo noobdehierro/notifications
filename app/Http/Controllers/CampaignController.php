@@ -174,6 +174,7 @@ class CampaignController extends Controller
             foreach ($getTemplates as $template) {
                 $channelName = $template->channel->name;
                 $templatePlaceholder = $template->placeholder;
+                $template_name = $template->template_name;
                 // dd($templatePlaceholder);
 
                 echo $channelName . ', ' . $request->email . ', ' . $template->name . '<br>';
@@ -183,7 +184,7 @@ class CampaignController extends Controller
 
                 if ($channelName == 'WhatsApp' && $request->telefono) {
                     try {
-                        sendWhatsapp($request->telefono, $templatePlaceholder, $template->name);
+                        sendWhatsapp($request->telefono, $template_name);
                     } catch (\Throwable $th) {
                         return back()->with('error', $th->getMessage());
                     }

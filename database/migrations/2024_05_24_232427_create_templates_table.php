@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('channel_id');
             $table->string('name');
             $table->text('placeholder');
+            $table->string('template_name')->nullable(); // Nuevo campo
             $table->timestamps();
 
             $table->unique(['name', 'channel_id']);

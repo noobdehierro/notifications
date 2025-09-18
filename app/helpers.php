@@ -140,7 +140,7 @@ function sendNotification()
                     $responseSendEmail = sendEmail($recipient->email, $placeholder, $template->name, $recipientName);
                 }
                 if ($channelName == 'WhatsApp' && $recipient->msisdn) {
-                    $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $placeholder, $template->name, $recipientName);
+                    $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $template->template_name);
                 }
                 if ($channelName == 'SMS' && $recipient->msisdn) {
                     $responseSendSms = sendSms($recipient->msisdn, $placeholder);
@@ -168,7 +168,7 @@ function sendEmail($to, $message, $campaignName, $name = 'unknown')
     }
 }
 
-function sendWhatsapp($msisdn, $message, $campaignName, $name = '')
+function sendWhatsapp($msisdn, $template_name)
 {
     try {
         $configKeys = [
@@ -191,34 +191,10 @@ function sendWhatsapp($msisdn, $message, $campaignName, $name = '')
                 "to" => "52" . $msisdn,
                 "type" => "template",
                 "template" => [
-                    "name" => "igou_notifications",
+                    "name" => $template_name,
                     "language" => [
                         "code" => "es_MX"
-                    ],
-                    "components" => [
-                        [
-                            "type" => "header",
-                            "parameters" => [
-                                [
-                                    "type" => "text",
-                                    "text" => $campaignName
-                                ]
-                            ]
-                        ],
-                        [
-                            "type" => "body",
-                            "parameters" => [
-                                [
-                                    "type" => "text",
-                                    "text" => $name ? $name : 'Cliente'
-                                ],
-                                [
-                                    "type" => "text",
-                                    "text" => $message
-                                ]
-                            ]
-                        ]
-                    ]
+                    ]      
                 ]
             ]
         ]);

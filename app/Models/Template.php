@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Template extends Model
 {
     use HasFactory;
-    protected $fillable = ['channel_id', 'name', 'placeholder'];
+    protected $fillable = ['channel_id', 'name', 'placeholder', 'template_name'];
 
     public function channel()
     {
@@ -18,5 +18,10 @@ class Template extends Model
     public function campaigns()
     {
         return $this->belongsToMany(Campaign::class, 'campaign_template');
+    }
+
+    public function setPlaceholderAttribute($value)
+    {
+        $this->attributes['placeholder'] = $value ?? '';
     }
 }

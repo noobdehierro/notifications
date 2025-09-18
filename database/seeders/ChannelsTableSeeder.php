@@ -32,7 +32,7 @@ class ChannelsTableSeeder extends Seeder
 
             [
                 'name' => 'Email',
-                'max_characters' => 1000,
+                'max_characters' => 10000,
             ],
 
         ];

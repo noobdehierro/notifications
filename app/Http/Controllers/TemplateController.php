@@ -42,7 +42,8 @@ class TemplateController extends Controller
         $request->validate([
             'name' => 'required',
             'channel_id' => 'required',
-            'placeholder' => 'required',
+            'placeholder' => 'required_if:channel_id,2,3', // Solo requerido para ciertos channel_ids
+            'template_name' => 'required_if:channel_id,1', // Solo requerido para channel_id 4 (WhatsApp)
         ]);
 
         // $channelName = Channel::find($request->channel_id)->name;
@@ -93,7 +94,8 @@ class TemplateController extends Controller
         $request->validate([
             'name' => 'required',
             'channel_id' => 'required',
-            'placeholder' => 'required',
+            'placeholder' => 'required_if:channel_id,2,3', // Solo requerido para ciertos channel_ids
+            'template_name' => 'required_if:channel_id,1', // Solo requerido para channel_id 
         ]);
 
         try {
