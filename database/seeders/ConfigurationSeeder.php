@@ -22,7 +22,7 @@ class ConfigurationSeeder extends Seeder
             [
                 'label' => 'Sandbox',
                 'code' => 'is_sandbox',
-                'value' => 'true',
+                'value' => 'false',
             ],
             [
                 'label' => 'Notifications Email',
@@ -42,22 +42,22 @@ class ConfigurationSeeder extends Seeder
             [
                 'label' => 'Nexus Token',
                 'code' => 'nexus_token',
-                'value' => 'MTphNW5QQTZtMHJSMWlCTVl2REpoUWFUcDQxUlA0WTBsU0ZFU2FQdktB',
+                'value' => 'MjpDSjY0TDdZdzdYUTN6TUY5U3lNbmx4dmlvVEV2ZnNDUjF3ZHBoZFo1',
             ],
             [
                 'label' => 'Nexus Token sandbox',
                 'code' => 'nexus_token_sandbox',
-                'value' => 'MTphNW5QQTZtMHJSMWlCTVl2REpoUWFUcDQxUlA0WTBsU0ZFU2FQdktB',
+                'value' => 'MjpDSjY0TDdZdzdYUTN6TUY5U3lNbmx4dmlvVEV2ZnNDUjF3ZHBoZFo1',
             ],
             [
                 'label' => 'WhatsApp Token',
                 'code' => 'whatsapp_token',
-                'value' => 'EAAGxrumaxTcBO98CHoZAzH0LS3fOb6O7nHTdAMHUFGB79MZBRy4hf0Avl9MMYb3dPLYfI9HUgXVYmnH2PWbR9D4d3M2AlpwgIdo2A8g9I4aMKHOsSwJDnWFZCNAe22KfZAcmMRC7C7dCFmraKAEUXkt19EckOZC5mhTTErIAcOWMzZCrKIRMnDzUA3zOnhMNZBTGnDS0CacSO7sSKuWDVthfAuW0U4ZD',
+                'value' => 'EAARr3709tpsBPtWNcxyP3IfmAgzQXolDvVKvzXoAiWcw6o4W6goExyjrIFFjOl0VCFidPqxon4Ez73w4pGdZA8IsWPboZBHmCcguktt19D2qWZBZAK1rZCY1fiXMNbf2vDZCqpBB2vMXUYHSVVbKdiUWsUCZCLhxDfbSQsopM3ZBYVj2lGjZBTIZAwVD0wPMGpAQZDZD',
             ],
             [
                 'label' => 'Id Phone Number WhatsApp',
                 'code' => 'id_phone_number_whatsapp',
-                'value' => '338995869302301',
+                'value' => '625587697313034',
             ],
             [
                 'label' => 'Api WhatsApp',

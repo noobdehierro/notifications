@@ -22,38 +22,84 @@ class TemplatesTableSeeder extends Seeder
         $templates = [
             [
                 'channel_id' => 1,
-                'name' => 'Lanzamineto didi food',
+                'name' => 'Cambio De Parrilla',
                 'placeholder' => '',
-                'template_name' => 'lanzamiento_food',
-            ],
-            [
-                'channel_id' => 2,
-                'name' => 'se aproxima suspensión de linea telefónica',
-                'placeholder' => '¡Hola! Tu línea telefónica ha sido suspendida por falta de pago. Contacta a tu proveedor para resolverlo cuanto antes. Lamentamos los inconvenientes, saludos.',
+                'template_name' => 'cambio_de_parrilla',
             ],
             [
                 'channel_id' => 3,
-                'name' => 'se aproxima suspensión de linea telefónica',
-                'placeholder' => '<h1>Suspensión Temporal del Servicio Telefónico</h1>
-<p>Estimado cliente,</p>
-<p>Nos dirigimos a usted para informarle que su servicio telefónico ha sido suspendido temporalmente debido a una actualización en nuestra infraestructura. Esta medida es parte de nuestros esfuerzos continuos por mejorar la calidad y fiabilidad de nuestros servicios.</p>
-<p>Estamos trabajando diligentemente para completar esta actualización lo antes posible y restaurar su servicio telefónico. Lamentamos cualquier inconveniente que esto pueda causarle y agradecemos su comprensión durante este tiempo.</p>
-<p>Para obtener más información o asistencia inmediata, por favor no dude en contactar a nuestro equipo de soporte técnico disponible las 24 horas.</p>',
+                'name' => 'Cambio De Parrilla',
+                'placeholder' => '<div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #e74c3c; font-size: 24px; margin-bottom: 20px;">¡Atención!</h2>
+</div>
+
+<p style="margin-bottom: 15px; font-size: 16px;">Hola, estimado usuario Figou.</p>
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+    <h3 style="font-size: 20px; margin-bottom: 15px;">🚀 Figou sube de nivel 🚀</h3>
+    <p style="margin-bottom: 10px; font-size: 16px;">Desde hoy tus recargas son mejores:</p>
+    <ul style="text-align: left; display: inline-block; margin: 0 auto; list-style:none">
+        <li style="margin-bottom: 8px;">✔️ Más GB en tus planes Figou</li>
+        <li style="margin-bottom: 8px;">✔️ GB acumulables para tu siguiente recarga</li>
+        <li style="margin-bottom: 8px;">✔️ Máxima velocidad siempre</li>
+    </ul>
+</div>
+
+<p style="margin-bottom: 20px; font-size: 16px;">Revisa los nuevos planes en <a href="https://figou.mx/recargas" style="color: #667eea;">figou.mx/recargas</a> o en IgouPay 📲</p>
+
+<p style="margin-bottom: 20px; font-size: 16px;">¿Preguntas? Te atendemos al <strong>5624962936</strong>.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <a href="https://tinyurl.com/FIGOUU" class="button" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; margin: 15px 0;">
+        Contáctanos por WhatsApp
+    </a>
+</div>
+
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 14px;">
+    <p style="margin-bottom: 10px;">Si quieres saber más de promociones, beneficios e información de Figou</p>
+    <p style="margin-bottom: 10px; font-weight: 600;">Sé parte de nuestro canal.</p>
+    <p style="margin-bottom: 0;">© IGOU TELECOM S.A.P.I. de C.V.</p>
+</div>'
             ],
             [
-                'channel_id' => 2,
-                'name' => 'su portabilidad a fallado',
-                'placeholder' => 'La portabilidad de su número falló por problemas técnicos. Contacte a atención al cliente para asistencia. Gracias por su paciencia mientras resolvemos.',
+                'channel_id' => 1,
+                'name' => 'Recordatorio De Recarga',
+                'placeholder' => '',
+                'template_name' => 'recordatorio_de_recarga',
             ],
             [
                 'channel_id' => 3,
-                'name' => 'su portabilidad a fallado',
-                'placeholder' => '<h1>Portabilidad Telefónica Fallida</h1>
-<p>Estimado cliente,</p>
-<p>Le informamos que el proceso de portabilidad de su número telefónico ha fallado debido a un problema técnico imprevisto. Estamos trabajando para resolver este inconveniente lo antes posible.</p>
-<p>Por favor, contacte a nuestro servicio de atención al cliente para obtener más información y asistencia. Agradecemos su paciencia y comprensión mientras solucionamos esta situación.</p>
-<p>Gracias por su confianza en nuestros servicios.</p>',
-            ],
+                'name' => 'Recordatorio De Recarga',
+                'placeholder' => '<div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #e74c3c; font-size: 24px; margin-bottom: 10px;">Recordatorio de recarga</h2>
+</div>
+
+<p style="margin-bottom: 15px; font-size: 16px;">Hola, estimado usuario Figou.</p>
+
+<div style="background: linear-gradient(135deg, #ff9a44 0%, #fc6076 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+    <p style="font-size: 18px; margin-bottom: 10px; font-weight: 600;">💡🚨 Tu recarga vence en 2 días. ¡No te quedes sin servicio! 💡🚨</p>
+</div>
+
+<p style="margin-bottom: 15px; font-size: 16px; font-weight: 600;">Recarga fácil en:</p>
+
+<ul style="margin-bottom: 20px; padding-left: 20px; list-style: none;">
+    <li style="margin-bottom: 10px; font-size: 16px;">👉 <a href="https://www.figou.mx/recargas" style="color: #667eea;">figou.mx/recargas</a></li>
+    <li style="margin-bottom: 10px; font-size: 16px;">👉 Ó en tu App IgouPay 📲</li>
+</ul>
+
+<p style="margin-bottom: 20px; font-size: 16px;">¿Dudas? Escríbenos al <strong>5624962936</strong>.</p>
+
+<div style="text-align: center; margin: 25px 0;">
+    <a href="https://www.figou.mx/recargas" class="button" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #ff9a44 0%, #fc6076 100%); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; margin: 15px 0;">
+        Recargar Ahora
+    </a>
+</div>
+
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 14px; text-align: center;">
+    <p style="margin-bottom: 0;">© IGOU TELECOM S.A.P.I. de C.V.</p>
+</div>'
+            ]
+
         ];
 
         foreach ($templates as $template) {

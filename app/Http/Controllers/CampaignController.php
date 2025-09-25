@@ -166,6 +166,7 @@ class CampaignController extends Controller
 
     public function proof(Request $request)
     {
+        // dd($request->all());
 
         try {
             $getTemplates = Template::whereIn('id', $request->prueba_templates_id)->get();
@@ -203,5 +204,21 @@ class CampaignController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
+    }
+
+    public function pruebasw()
+    {
+        $data = sendWhatsapp('5542762991', 'cambio_de_parrilla');
+        return response()->json($data);
+    }
+    public function pruebass()
+    {
+        $data = sendSms('5542762991', 'Hola, este es un mensaje de prueba desde la API de SMS.');
+        return response()->json($data);
+    }
+    public function pruebasc()
+    {
+        $data = sendEmail('joseluisreyesalvarez97@gmail.com', '¡Hola! Tu línea telefónica ha sido suspendida por falta de pago. Contacta a tu proveedor para resolverlo cuanto antes. Lamentamos los inconvenientes, saludos.', 'Línea suspendida');
+        return response()->json($data);
     }
 }

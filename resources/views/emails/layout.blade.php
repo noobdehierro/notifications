@@ -118,8 +118,8 @@
                     <!-- <a href="#">Twitter</a> |  -->
                     <a href="https://www.instagram.com/figou.mx?igsh=bHk1MndscTR5ZTg4">Instagram</a>
                 </div>
-                <p>Si tienes alguna pregunta, contáctanos en <a href="mailto:soporte@ejemplo.com">soporte@ejemplo.com</a></p>
-                <p><a href="https://www.facebook.com/figou.mx">Visitar sitio web</a></p>
+                <p>Si tienes alguna pregunta, contáctanos en <a href="mailto:notificaciones@igou.mx">notificaciones@igou.mx</a></p>
+                <p><a href="https://figou.mx/">Visitar sitio web</a></p>
             </div>
         </div>
     </center>

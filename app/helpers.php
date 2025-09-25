@@ -118,7 +118,7 @@ function sendNotification()
     $responseSendWhatsapp = null;
     $responseSendSms = null;
     try {
-        $recipients = Recipient::limit(10)->get();
+        $recipients = Recipient::limit(5)->get();
 
         if ($recipients->isEmpty()) {
             return false; // No hay más datos

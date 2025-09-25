@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CampaignController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/pruebasw', [CampaignController::class, 'pruebasw'])->name('pruebasw.index');
+Route::get('/pruebass', [CampaignController::class, 'pruebass'])->name('pruebass.index');
+Route::get('/pruebasc', [CampaignController::class, 'pruebasc'])->name('pruebasc.index');
