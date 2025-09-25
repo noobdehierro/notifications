@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('msisdn')->nullable();
+            $table->boolean('email_sent')->default(false);
             $table->timestamps();
 
             $table->foreign('campaign_id')->references('id')->on('campaigns')->onDelete('cascade');

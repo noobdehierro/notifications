@@ -121,23 +121,23 @@ function sendNotification()
         $recipients = Recipient::limit(5)->get();
 
         if ($recipients->isEmpty()) {
-            return false; // No hay más datos
+            return false;
         }
 
-        // $msisdnExamples = ['5542762991', '5581513788'];
-        // $emailExamples = ['jreyes@igou.mx', 'amartinez@igou.mx'];
-
         foreach ($recipients as $key => $recipient) {
-            // $recipient->msisdn = $msisdnExamples[$key] ?? $recipient->msisdn;
-            // $recipient->email = $emailExamples[$key] ?? $recipient->email;
-
             foreach ($recipient->campaign->templates as $template) {
                 $channelName = $template->channel->name;
                 $placeholder = $template->placeholder;
                 $recipientName = $recipient->name;
 
                 if ($channelName == 'Email' && $recipient->email) {
-                    $responseSendEmail = sendEmail($recipient->email, $placeholder, $template->name, $recipientName);
+                    if (!$recipient->email_sent) {
+                        $responseSendEmail = sendEmail($recipient->email, $placeholder, $template->name, $recipientName);
+
+                        Recipient::where('campaign_id', $recipient->campaign_id)
+                            ->where('email', $recipient->email)
+                            ->update(['email_sent' => true]);
+                    }
                 }
                 if ($channelName == 'WhatsApp' && $recipient->msisdn) {
                     $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $template->template_name);
@@ -150,9 +150,9 @@ function sendNotification()
             $recipient->delete();
         }
 
-        return true; // Procesó datos
+        return true;
     } catch (Exception $e) {
-        return false; // Error
+        return false;
     }
 }
 
@@ -194,7 +194,7 @@ function sendWhatsapp($msisdn, $template_name)
                     "name" => $template_name,
                     "language" => [
                         "code" => "es_MX"
-                    ]      
+                    ]
                 ]
             ]
         ]);
