@@ -44,6 +44,7 @@ class TemplateController extends Controller
             'channel_id' => 'required',
             'placeholder' => 'required_if:channel_id,2,3', // Solo requerido para ciertos channel_ids
             'template_name' => 'required_if:channel_id,1', // Solo requerido para channel_id 4 (WhatsApp)
+            'url_image' => 'nullable|url', // Validar que sea una URL si se proporciona
         ]);
 
         // $channelName = Channel::find($request->channel_id)->name;
@@ -96,6 +97,7 @@ class TemplateController extends Controller
             'channel_id' => 'required',
             'placeholder' => 'required_if:channel_id,2,3', // Solo requerido para ciertos channel_ids
             'template_name' => 'required_if:channel_id,1', // Solo requerido para channel_id 
+            'url_image' => 'nullable|url', // Validar que sea una URL si se proporciona
         ]);
 
         try {

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Template extends Model
 {
     use HasFactory;
-    protected $fillable = ['channel_id', 'name', 'placeholder', 'template_name'];
+    protected $fillable = ['channel_id', 'name', 'placeholder', 'template_name', 'url_image'];
 
     public function channel()
     {

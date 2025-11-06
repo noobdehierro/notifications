@@ -185,7 +185,8 @@ class CampaignController extends Controller
 
                 if ($channelName == 'WhatsApp' && $request->telefono) {
                     try {
-                        sendWhatsapp($request->telefono, $template_name);
+                        $imgUrl = $template->url_image ?? null;
+                        sendWhatsapp($request->telefono, $template_name, $imgUrl);
                     } catch (\Throwable $th) {
                         return back()->with('error', $th->getMessage());
                     }

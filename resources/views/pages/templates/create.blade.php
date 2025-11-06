@@ -87,6 +87,18 @@
 
                                                 </div>
 
+                                                <div class="form-group" hidden id="url_image_div">
+                                                    <label for="example-text-input" class="form-control-label">URL de la imagen</label>
+                                                    <input class="form-control" type="text" name="url_image">
+
+                                                    @if ($errors->has('url_image'))
+                                                    <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                        role="alert">{{ $errors->first('url_image') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+
+
                                             </div>
                                         </div>
                                 </form>
@@ -125,10 +137,12 @@
                             $("#max_characters").text(response.max_characters);
 
                             $("#template_name_div").attr('hidden', true);
+                            $("#url_image_div").attr('hidden', true);
 
                         } else {
                             $("#content").attr('hidden', true);
                             $("#template_name_div").attr('hidden', false);
+                            $("#url_image_div").attr('hidden', false);
                         }
 
                     },

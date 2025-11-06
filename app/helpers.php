@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 function getNexusConfig()
 {
@@ -114,9 +115,6 @@ function getNexusResponse()
 
 function sendNotification()
 {
-    $responseSendEmail = null;
-    $responseSendWhatsapp = null;
-    $responseSendSms = null;
     try {
         $recipients = Recipient::limit(10)->get();
 
@@ -140,10 +138,11 @@ function sendNotification()
                     }
                 }
                 if ($channelName == 'WhatsApp' && $recipient->msisdn) {
-                    $responseSendWhatsapp = sendWhatsapp($recipient->msisdn, $template->template_name);
+                    $imgUrl = $template->url_image ?? null;
+                    sendWhatsapp($recipient->msisdn, $template->template_name, $imgUrl);
                 }
                 if ($channelName == 'SMS' && $recipient->msisdn) {
-                    $responseSendSms = sendSms($recipient->msisdn, $placeholder);
+                    sendSms($recipient->msisdn, $placeholder);
                 }
             }
 
@@ -168,7 +167,7 @@ function sendEmail($to, $message, $campaignName, $name = 'unknown')
     }
 }
 
-function sendWhatsapp($msisdn, $template_name)
+function sendWhatsapp($msisdn, $template_name, $img_url = null)
 {
     try {
         $configKeys = [
@@ -178,9 +177,33 @@ function sendWhatsapp($msisdn, $template_name)
         ];
         $configurations = Configuration::whereIn('code', $configKeys)->pluck('value', 'code');
 
-        // dd($configurations['api_whatsapp'] . $configurations['id_phone_number_whatsapp'] . '/messages');
-
         $client = new Client();
+
+        // Construir el array base del template
+        $templateData = [
+            "name" => $template_name,
+            "language" => [
+                "code" => "es_MX"
+            ]
+        ];
+
+        // Agregar componentes solo si hay imagen
+        if ($img_url !== null) {
+            $templateData["components"] = [
+                [
+                    "type" => "header",
+                    "parameters" => [
+                        [
+                            "type" => "image",
+                            "image" => [
+                                "link" => $img_url
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
         $response = $client->post($configurations['api_whatsapp'] . $configurations['id_phone_number_whatsapp'] . '/messages', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $configurations['whatsapp_token'],
@@ -190,12 +213,7 @@ function sendWhatsapp($msisdn, $template_name)
                 "messaging_product" => "whatsapp",
                 "to" => "52" . $msisdn,
                 "type" => "template",
-                "template" => [
-                    "name" => $template_name,
-                    "language" => [
-                        "code" => "es_MX"
-                    ]
-                ]
+                "template" => $templateData
             ]
         ]);
 
@@ -203,11 +221,11 @@ function sendWhatsapp($msisdn, $template_name)
             'status' => 'success',
             'data' => json_decode($response->getBody(), true),
         ]);
-
-        // dd(json_decode($response->getBody(), true));
     } catch (Exception $e) {
+        // agregar un log de error
+            Log::error('Error sending WhatsApp message: ' . $e->getMessage());
+
         return response()->json(['error' => $e->getMessage()], 500);
-        // dd($e->getMessage());
     }
 }
 

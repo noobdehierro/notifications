@@ -91,6 +91,17 @@
 
                                                 </div>
 
+                                                <div class="form-group" id="url_image_div" hidden>
+                                                    <label for="example-text-input" class="form-control-label">URL de la imagen</label>
+                                                    <input class="form-control" type="text" name="url_image" value="{{ $template->url_image }}">
+
+                                                    @if ($errors->has('url_image'))
+                                                    <div class="alert alert-warning alert-dismissible fade show mt-1"
+                                                        role="alert">{{ $errors->first('url_image') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -128,11 +139,13 @@
                     $("#max_characters").text(response.max_characters);
 
                     $("#template_name_div").attr('hidden', true);
+                    $("#url_image_div").attr('hidden', true);
                     $("#content").attr('hidden', false);
 
 
                 } else {
                     $("#template_name_div").attr('hidden', false);
+                    $("#url_image_div").attr('hidden', false);
                     $("#content").attr('hidden', true);
 
 
@@ -168,10 +181,12 @@
                             $("#max_characters").text(response.max_characters);
 
                             $("#template_name_div").attr('hidden', true);
+                            $("#url_image_div").attr('hidden', true);
 
                         } else {
                             $("#content").attr('hidden', true);
                             $("#template_name_div").attr('hidden', false);
+                            $("#url_image_div").attr('hidden', false);
                         }
 
                     },
