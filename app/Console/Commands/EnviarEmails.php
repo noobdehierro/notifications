@@ -64,5 +64,8 @@ class EnviarEmails extends Command
             $this->info('Proceso finalizado.');
             $this->shouldRun = false;
         }
+
+            \App\Models\RecipientCopy::truncate();
+
     }
 }
