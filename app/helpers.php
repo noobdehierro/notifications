@@ -4,6 +4,7 @@ use App\Mail\Notification;
 use App\Models\Campaign;
 use App\Models\Configuration;
 use App\Models\Recipient;
+use App\Models\RecipientCopy;
 use Aws\Exception\AwsException;
 use Aws\Sns\SnsClient;
 use Carbon\Carbon;
@@ -113,57 +114,118 @@ function getNexusResponse()
     }
 }
 
+
 function sendNotification()
 {
     try {
-        $recipients = Recipient::limit(10)->get();
+        $recipients = Recipient::orderBy('id')->limit(5)->get();
+
 
         if ($recipients->isEmpty()) {
             return false;
         }
 
-        foreach ($recipients as $key => $recipient) {
-            foreach ($recipient->campaign->templates as $template) {
+        foreach ($recipients as $recipient) {
+            $campaignId = $recipient->campaign_id;
+            $templates = $recipient->campaign->templates;
+
+            foreach ($templates as $template) {
                 $channelName = $template->channel->name;
                 $placeholder = $template->placeholder;
                 $recipientName = $recipient->name;
 
+                // === EMAIL ===
                 if ($channelName == 'Email' && $recipient->email) {
-                    if (!$recipient->email_sent) {
-                        $responseSendEmail = sendEmail($recipient->email, $placeholder, $template->name, $recipientName);
+                    $exists = RecipientCopy::where('campaign_id', $campaignId)
+                        ->where('email', $recipient->email)
+                        ->exists();
 
-                        Recipient::where('campaign_id', $recipient->campaign_id)
+                    if (!$exists) {
+                        $responseSendEmail = sendEmail(
+                            $recipient->email,
+                            $placeholder,
+                            $template->name,
+                            $recipientName
+                        );
+                        // Guardar registro en RecipientCopy
+                        RecipientCopy::create([
+                            'campaign_id' => $campaignId,
+                            'email' => $recipient->email,
+                            'msisdn' => $recipient->msisdn,
+                        ]);
+
+                        Recipient::where('campaign_id', $campaignId)
                             ->where('email', $recipient->email)
                             ->update(['email_sent' => true]);
+                            
+                    } else {
+                        Log::info("Email ya enviado a {$recipient->email} para campaña {$campaignId}");
                     }
                 }
+
+                // === WHATSAPP ===
                 if ($channelName == 'WhatsApp' && $recipient->msisdn) {
-                    $imgUrl = $template->url_image ?? null;
-                    sendWhatsapp($recipient->msisdn, $template->template_name, $imgUrl);
+                    $exists = RecipientCopy::where('campaign_id', $campaignId)
+                        ->where('msisdn', $recipient->msisdn)
+                        ->exists();
+
+                    if (!$exists) {
+                        $imgUrl = $template->url_image ?? null;
+                        sendWhatsapp($recipient->msisdn, $template->template_name, $imgUrl);
+                        RecipientCopy::create([
+                            'campaign_id' => $campaignId,
+                            'email' => $recipient->email,
+                            'msisdn' => $recipient->msisdn,
+                        ]);
+                    } else {
+                        Log::info("WhatsApp ya enviado a {$recipient->msisdn} para campaña {$campaignId}");
+                    }
                 }
+
+                // === SMS === (opcional mantener igual)
                 if ($channelName == 'SMS' && $recipient->msisdn) {
-                    sendSms($recipient->msisdn, $placeholder);
+                    $exists = RecipientCopy::where('campaign_id', $campaignId)
+                        ->where('msisdn', $recipient->msisdn)
+                        ->exists();
+
+                    if (!$exists) {
+                        sendSms($recipient->msisdn, $placeholder);
+
+                        RecipientCopy::create([
+                            'campaign_id' => $campaignId,
+                            'email' => $recipient->email,
+                            'msisdn' => $recipient->msisdn,
+                        ]);
+                    } else {
+                        Log::info("SMS ya enviado a {$recipient->msisdn} para campaña {$campaignId}");
+                    }
                 }
             }
 
+            // Eliminar el recipient original después de procesar
             $recipient->delete();
         }
 
         return true;
     } catch (Exception $e) {
+        Log::error('Error in sendNotification: ' . $e->getMessage());
         return false;
     }
 }
+
 
 function sendEmail($to, $message, $campaignName, $name = 'unknown')
 {
     try {
         $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
-        return 'Email sent successfully';
-        // dd($response);
+        Log::info("📧 Simulación de envío: To={$to}, Subject=mamacitas puebla, Name={$name}, Campaign Name={$campaignName}");
+        return true; // Simula éxito       
+         // dd($response);
     } catch (Exception $e) {
-        return 'Failed to send email: ' . $e->getMessage();
+        // return 'Failed to send email: ' . $e->getMessage();
         // dd($e);
+        Log::error('Error in sendEmail: ' . $e->getMessage());
+        return false;
     }
 }
 
@@ -223,7 +285,7 @@ function sendWhatsapp($msisdn, $template_name, $img_url = null)
         ]);
     } catch (Exception $e) {
         // agregar un log de error
-            Log::error('Error sending WhatsApp message: ' . $e->getMessage());
+        Log::error('Error sending WhatsApp message: ' . $e->getMessage());
 
         return response()->json(['error' => $e->getMessage()], 500);
     }
