@@ -217,7 +217,7 @@ function sendNotification()
 function sendEmail($to, $message, $campaignName, $name = 'unknown')
 {
     try {
-        // $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
+        $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
         Log::info("📧 Simulación de envío: To={$to}, Subject=mamacitas puebla, Name={$name}, Campaign Name={$campaignName}");
         return true; // Simula éxito       
          // dd($response);
