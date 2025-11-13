@@ -44,18 +44,21 @@ class EnviarEmails extends Command
 
         while ($this->shouldRun) {
             try {
+
+                $this->info("Esperando 30 segundos antes del siguiente ciclo...");
+                sleep(30);
+
                 $processed = sendNotification();
 
                 if (!$processed) {
                     $this->info('No hay más datos para procesar. Deteniendo el proceso.');
-                    break; // Salir del ciclo
+                    break;
                 }
-
-                sleep(10); // Esperar antes de la siguiente iteración
             } catch (\Exception $e) {
                 $this->error('Error: ' . $e->getMessage());
             }
         }
+
 
         if (Recipient::count() > 0) {
             $this->info('Proceso finalizado con ' . Recipient::count() . ' datos restantes.');
@@ -65,7 +68,6 @@ class EnviarEmails extends Command
             $this->shouldRun = false;
         }
 
-            \App\Models\RecipientCopy::truncate();
-
+        \App\Models\RecipientCopy::truncate();
     }
 }
