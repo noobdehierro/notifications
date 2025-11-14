@@ -6,6 +6,7 @@ use App\Models\Campaign;
 use App\Models\Recipient;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class EnviarEmails extends Command
@@ -40,18 +41,23 @@ class EnviarEmails extends Command
     public function handle()
     {
 
+        // Log::info('Proceso iniciado');
+
+
         getNexusResponse();
 
         while ($this->shouldRun) {
+            // Log::info('dentro del while');
             try {
 
 
 
 
                 $processed = sendNotification();
-
+                
                 if (!$processed) {
                     $this->info('No hay más datos para procesar. Deteniendo el proceso.');
+                    Log::info('No hay más datos para procesar. Deteniendo el proceso.');
                     break; // Salir del ciclo
                 }
 
