@@ -164,7 +164,7 @@ function sendNotification()
                         RecipientCopy::create([
                             'campaign_id' => $campaignId,
                             'email' => $recipient->email,
-                            'msisdn' => $recipient->msisdn,
+                            // 'msisdn' => $recipient->msisdn,
                         ]);
 
                         Recipient::where('campaign_id', $campaignId)
@@ -186,7 +186,7 @@ function sendNotification()
                         sendWhatsapp($recipient->msisdn, $template->template_name, $imgUrl);
                         RecipientCopy::create([
                             'campaign_id' => $campaignId,
-                            'email' => $recipient->email,
+                            // 'email' => $recipient->email,
                             'msisdn' => $recipient->msisdn,
                         ]);
                     } else {
