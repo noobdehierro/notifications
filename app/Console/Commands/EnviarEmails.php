@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Campaign;
 use App\Models\Recipient;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
 class EnviarEmails extends Command
 {
@@ -22,11 +25,12 @@ class EnviarEmails extends Command
     protected $description = 'Enviar emails de recordatorio a los usuarios';
 
     /**
-     * Control del bucle interno
+     * Interruptor para detener o reiniciar el proceso.
      *
      * @var bool
      */
     protected $shouldRun = true;
+
 
     /**
      * Execute the console command.
@@ -35,77 +39,38 @@ class EnviarEmails extends Command
      */
     public function handle()
     {
-        // --- LOCK PARA EVITAR EJECUCIONES EN PARALELO ------------------------
-        if (! $this->acquireLock()) {
-            $this->info("Ya hay un proceso ejecutándose. Saliendo...");
-            return Command::SUCCESS;
-        }
 
-        $this->info("Iniciando proceso...");
+        getNexusResponse();
 
-        try {
-            // ---------------------------------------------------------------------
-            // PRIMERA CARGA DE DATOS
-            // ---------------------------------------------------------------------
-            getNexusResponse();
+        while ($this->shouldRun) {
+            try {
 
-            // ---------------------------------------------------------------------
-            // CICLO DE PROCESAMIENTO
-            // ---------------------------------------------------------------------
-            while ($this->shouldRun) {
 
-                $this->info("Esperando 30 segundos antes del siguiente ciclo...");
-                sleep(30);
 
-                $processed = sendNotification(); // debe regresar true o false
+
+                $processed = sendNotification();
 
                 if (!$processed) {
                     $this->info('No hay más datos para procesar. Deteniendo el proceso.');
-                    break;
+                    break; // Salir del ciclo
                 }
+
+                sleep(10); // Esperar antes de la siguiente iteración
+            } catch (\Exception $e) {
+                $this->error('Error: ' . $e->getMessage());
             }
-
-            // ---------------------------------------------------------------------
-            // ESTADO FINAL
-            // ---------------------------------------------------------------------
-            if (Recipient::count() > 0) {
-                $this->info('Proceso finalizado con ' . Recipient::count() . ' datos restantes.');
-                $this->shouldRun = true;
-            } else {
-                $this->info('Proceso finalizado sin datos restantes.');
-                $this->shouldRun = false;
-            }
-
-            // Limpieza final
-            \App\Models\RecipientCopy::truncate();
-
-        } catch (\Exception $e) {
-
-            // Manejo de errores
-            $this->error('Error: ' . $e->getMessage());
-
-        } finally {
-
-            // --- LIBERA EL LOCK SIEMPRE, INCLUSO SI HAY ERRORES ---------------
-            $this->releaseLock();
         }
 
-        return Command::SUCCESS;
-    }
 
-    // =========================================================================
-    // MÉTODOS DE LOCK
-    // =========================================================================
+        if (Recipient::count() > 0) {
+            $this->info('Proceso finalizado con ' . Recipient::count() . ' datos restantes.');
+            $this->shouldRun = true;
+        } else {
+            $this->info('Proceso finalizado.');
+            $this->shouldRun = false;
+        }
 
-    protected function acquireLock()
-    {
-        // Crea una llave que dura 10 minutos
-        // cache()->add devuelve FALSE si ya existe → evita procesos paralelos
-        return cache()->add('emails_enviar_lock', true, 600);
-    }
+            \App\Models\RecipientCopy::truncate();
 
-    protected function releaseLock()
-    {
-        cache()->forget('emails_enviar_lock');
     }
 }
