@@ -126,22 +126,8 @@ function sendNotification()
         }
 
         foreach ($recipients as $recipient) {
-
-            // 1. Guardar datos antes de eliminar
-            $recipientData = [
-                'campaign_id' => $recipient->campaign_id,
-                'email'       => $recipient->email,
-                'msisdn'      => $recipient->msisdn,
-                'name'        => $recipient->name,
-                'campaign'    => $recipient->campaign,
-            ];
-
-            // 2. Eliminar el registro antes de procesar
-            $recipient->delete();
-
-            // 3. Procesar con la data guardada
-            $campaignId = $recipientData['campaign_id'];
-            $templates  = $recipientData['campaign']->templates;
+            $campaignId = $recipient->campaign_id;
+            $templates = $recipient->campaign->templates;
 
             foreach ($templates as $template) {
                 $channelName = $template->channel->name;
@@ -171,6 +157,7 @@ function sendNotification()
                         Recipient::where('campaign_id', $campaignId)
                             ->where('email', $recipient->email)
                             ->update(['email_sent' => true]);
+                            
                     } else {
                         Log::info("Email ya enviado a {$recipient->email} para campaña {$campaignId}");
                     }
@@ -233,7 +220,7 @@ function sendEmail($to, $message, $campaignName, $name = 'unknown')
         $response = Mail::to($to)->send(new Notification($name, $message, $campaignName));
         Log::info("📧 Simulación de envío: To={$to}, Subject=mamacitas puebla, Name={$name}, Campaign Name={$campaignName}");
         return true; // Simula éxito       
-        // dd($response);
+         // dd($response);
     } catch (Exception $e) {
         // return 'Failed to send email: ' . $e->getMessage();
         // dd($e);
