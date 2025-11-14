@@ -118,7 +118,7 @@ function getNexusResponse()
 function sendNotification()
 {
     try {
-        $recipients = Recipient::orderBy('id')->limit(1)->get();
+        $recipients = Recipient::orderBy('id')->limit(10)->get();
 
 
         if ($recipients->isEmpty()) {

@@ -40,43 +40,39 @@ class EnviarEmails extends Command
      */
     public function handle()
     {
-
-        // Log::info('Proceso iniciado');
-
-
+        // 🔒 Lock para evitar procesos simultáneos
+        if (! cache()->add('emails_enviar_lock', true, 120)) {
+            $this->info('Otro proceso ya está corriendo.');
+            Log::info('Otro proceso ya estaba corriendo.');
+            return 0;
+        }
         getNexusResponse();
 
-        while ($this->shouldRun) {
-            // Log::info('dentro del while');
-            try {
+        try {
 
+            while (true) {
+                try {
+                    $processed = sendNotification();
 
+                    if (!$processed) {
+                        $this->info('No hay más datos para procesar. Deteniendo el proceso.');
+                        Log::info('No hay más datos para procesar. Deteniendo el proceso.');
+                        break;
+                    }
 
-
-                $processed = sendNotification();
-                
-                if (!$processed) {
-                    $this->info('No hay más datos para procesar. Deteniendo el proceso.');
-                    Log::info('No hay más datos para procesar. Deteniendo el proceso.');
-                    break; // Salir del ciclo
+                    sleep(10);
+                } catch (\Exception $e) {
+                    $this->error('Error: ' . $e->getMessage());
+                    Log::error('Error: ' . $e->getMessage());
                 }
-
-                sleep(10); // Esperar antes de la siguiente iteración
-            } catch (\Exception $e) {
-                $this->error('Error: ' . $e->getMessage());
             }
+        } finally {
+            // 🔓 Liberar lock
+            cache()->forget('emails_enviar_lock');
         }
 
-
-        if (Recipient::count() > 0) {
-            $this->info('Proceso finalizado con ' . Recipient::count() . ' datos restantes.');
-            $this->shouldRun = true;
-        } else {
-            $this->info('Proceso finalizado.');
-            $this->shouldRun = false;
-        }
-
-            \App\Models\RecipientCopy::truncate();
-
+        $this->info('Proceso finalizado.');
+        Log::info('Proceso finalizado.');
+        \App\Models\RecipientCopy::truncate();
     }
 }
